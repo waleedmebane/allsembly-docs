@@ -14,7 +14,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="License" href="license.html" />
+    <link rel="next" title="GNU Free Documentation License" href="license.html" />
     <link rel="prev" title="User’s Guide" href="user_s_guide.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -43,15 +43,274 @@
 <div class="section" id="files">
 <h2>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="specification-of-requirements-draft">
+<h2>Specification of requirements (draft)<a class="headerlink" href="#specification-of-requirements-draft" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="design-overview">
 <h2>Design overview<a class="headerlink" href="#design-overview" title="Permalink to this headline">¶</a></h2>
 <p class="plantuml">
-<img src="_images/plantuml-625594bd5422a6828707bf713aec8bf844683584.png" alt="&#64;startuml
+<img src="_images/plantuml-60128842aa493cac5fb1c9c1f8fa0cba4215f083.png" alt="&#64;startuml
+caption Figure 1
 class AllsemblyServer {
+-userauth_dbfilename: str
+-user_dbfilename: str
+-arg_dbfilename: str
+-order_queue: deque[Tuple]
+-graph_arg_queue: deque[Tuple]
+-graph_pos_queue: deque[Tuple]
++process_all_issues_from_queue()
++process_all_orders_from_queue()
++process_all_positions_from_queue()
++process_all_items_from_all_queues()
++process_all_items_of_one_request()
++cleanup()
++server_main_loop()
 }
+
+class ServerControl {
+- _should_exit: int
++ should_exit()
++ set_should_exit()
++ reset_should_exit()
+}
+
+ServerControl o.. AllsemblyServer
+
+class Issues(Persistent) {
++ graphs: OOBTree
++ next_issue_id: AtomicLong
+}
+
+&quot;Issues(Persistent)&quot; *-- AllsemblyServer: &lt;&lt;create&gt;&gt;
+
+class IssueQueue {
+- queue: deque
++ add_issue()
++ delete_issue()
+}
+
+IssueQueue *-- AllsemblyServer: &lt;&lt;create&gt;&gt;
+&quot;Issues(Persistent)&quot; o-- IssueQueue
+
+class _UserAuthenticator {
+- userauth_dbfilename: str
+- user_dbfilename: str
+- authdb_storage: ZODB..FileStorage
+- userdb_storage: ZODB..FileStorage
+- authdb: ZODB.DB
+- userdb: ZODB.DB
+- authdb_conn: ZODB..Connection
+- userdb_conn: ZODB..Connection
+- _fernet_cryptor: bytes
+- {field} userid_salt (unused)
++ authenticate_user()
++ close_databases()
+}
+
+_UserAuthenticator &lt;.. AllsemblyServer: &lt;&lt;create&gt;&gt;
+
+class ArgumentGraph(Persistent) {
+- {static} _v_my_rwlock: RWLockWrite
+- _v_my_wlock
+- _v_my_rlock
++ issue_name: str
+- arg_node_index: PersistentMapping
+- pos_node_index: PersistentMapping
+- next_arg_id: AtomicLong
+- next_pos_id: AtomicLong
+- read_buffer_index: int
+- write_buffer_index: int
+- /_v_gv_graph: AGraph
+- /my_problog_prog: str
+- /_v_my_g_svg: list[str]
+- _add_position_to_gv_graph()
+- _add_argument_to_gv_graph()
+- _update_gv_graph_nodes()
+- _build_initial_gv_graph()
+- _add_clause_to_problog_program()
+- _add_virtual_evidence_to_problog_program()
+- _add_term_and_query_to_problog_program()
+- _build_problog_program()
+- _problog_calculate()
++ get_problog_program_string()
++ add_argument()
++ get_position_copy()
++ add_position()
++ hide_arguement() (unused)
+- _prepare_graph()
++ draw_graph()
+}
+
+&quot;ArgumentGraph(Persistent)&quot; &quot;1..*&quot; *-- &quot;1&quot; &quot;Issues(Persistent)&quot;
+
+class PositionNode(Persistent) {
+{field} ... (dataclass)
+{static} build_PositionNode()
+}
+
+class ArgumentNode(Persistent) {
+{field} ... (dataclass)
+{static} build_ArgumentNode()
+}
+
+&quot;PositionNode(Persistent)&quot; &quot;0..*&quot; *-- &quot;1&quot; &quot;ArgumentGraph(Persistent)&quot;
+&quot;ArgumentNode(Persistent)&quot; &quot;0..*&quot; *-- &quot;1&quot; &quot;ArgumentGraph(Persistent)&quot;
+
+class UserAuth(Persistent) {
+userid_hashed: bytes
+password_hashed: bytes
+pwd_salt: bytes
+}
+
+class UserInfo(Persistent) {
+userid_hashed: bytes
+last_login: int
+{field} current_isssue: int (unused)
+{field} current_subuser: str (unused)
+{field} subusers: PersistentMapping (unused)
+}
+
+class UserClientSettings(Persistent) {
+{field} (unused)
+}
+
+_UserAuthenticator &quot;1&quot; o.. &quot;0..*&quot; &quot;UserAuth(Persistent)&quot;
+_UserAuthenticator &quot;1&quot; o.. &quot;0..*&quot; &quot;UserInfo(Persistent)&quot;
+&quot;UserInfo(Persistent)&quot; *-- &quot;UserClientSettings(Persistent)&quot;
+
+class GraphRequest {
++ draw()
++ get_position_details()
+}
+
+&quot;Issues(Persistent)&quot; o-- GraphRequest
+
+class LedgerRequest {
+{field} (unused)
+}
+
+class AllsemblyServices(rpyc.Service) {
+- order_queue: deque[Tuple]
+- graph_arg_queue: deque[Tuple]
+- graph_pos_queue: deque[Tuple]
++ on_connect()
++ on_disconnect()
++ exposed_get_user_services()
++ exposed_authenticate_user()
+- _add_issue()
+}
+
+GraphRequest o-- &quot;AllsemblyServices(rpyc.Service)&quot;
+LedgerRequest o-- &quot;AllsemblyServices(rpyc.Service)&quot;
+_UserAutheenticator o-- &quot;AllsemblyServices(rpyc.Service)&quot;
+
+class UserServices {
++ check_commitments_for_consistency() (unused)
++ delete_issue()
++ argue()
++ propose()
++ get_arg_graph()
++ get_position_details()
+}
+
+UserServices &lt;--+ &quot;AllsemblyServices(rpyc.Service)&quot;
+
+class ProblogModel(Persistent) {
+- {static} _v_my_rwlock: RWLockWrite
+- _v_my_wlock
+- _v_my_rlock
+- _read_buffer_index: int
+- _write_buffer_index: int
+- _problog_queuy_results
+- __setstate__()
++ calculate_marginals()
++ add_terms() (unused)
++ update_term_weights() (unused)
+}
+
+&quot;ArgumentGraph(Persistent)&quot; --* &quot;ProblogModel(Persistent)&quot;
+
+class BettingExchange(Persistent) {
+}
+
+class BettingMarket(Persistent) {
++ last_support_price: float
++ {field} market_id: int (same as arg_id)
+}
+
+&quot;BettingMarket(Persistent)&quot; &quot;1..*&quot; *-- &quot;1&quot; &quot;BettingExchange(Persistent)&quot;
+
+class OrderBook(Persistent) {
+- support_bids_index
+- oppose_bids_index
+- support_asks_index
+- oppose_asks_index
++ ... () (future methods)
+}
+
+&quot;OrderBook(Persistent)&quot; *-- &quot;BettingMarket(Persistent)&quot;
+
+class IndependentBid(orAsk) {
+{field} ... (future fields)
+}
+
+&quot;IndependentBid(orAsk)&quot; &quot;0..*&quot; *-- &quot;OrderBook(Persistent)&quot;: support_bids (or _asks)
+&quot;IndependentBid(orAsk)&quot; &quot;0..*&quot; *-- &quot;OrderBook(Persistent)&quot;: oppose_bids (or _asks)
+
+class Ledger(Persistent) {
++ index: OOBTree
+==
+I think there should
+be only one Ledger
+object (not one per
+exchange)
+}
+
+class BettingContract(Persistent) {
++ {field} user1_anonid: bytes
++ {field} user2_anonid: bytes
++ purchase_price: float
++ position_locator
+...
+}
+
+&quot;Ledger(Persistent)&quot; &quot;0..*&quot; --* &quot;BettingContract(Persistent)&quot;
+&quot;Ledger(Persistent)&quot; &quot;1&quot; o-- &quot;BettingMarket(Persistent)&quot;: support_ledger_ref
+&quot;Ledger(Persistent)&quot; &quot;1&quot; o-- &quot;BettingMarket(Persistent)&quot;: oppose_ledger_ref
+
+&quot;ArgumentGraph(Persistent)&quot; --* &quot;BettingExchange(Persistent)&quot;
 &#64;enduml
 "/>
 </p>
+<p class="plantuml">
+<img src="_images/plantuml-c556e88ebc435c6386db25cfe04e46f6ae5d35f0.png" alt="&#64;startuml
+caption Figure 2
+UserAgent -&gt; &quot;(Fast)CGI&quot;: Authentication request
+&quot;(Fast)CGI&quot; -&gt; AllsemblyServices: Process auth request
+
+alt sucessful authentication
+
+    AllsemblyServices -&gt; &quot;(Fast)CGI&quot;: encrypted cookie
+    &quot;(Fast)CGI&quot; -&gt; UserAgent: set cookie
+    UserAgent -&gt; &quot;(Fast)CGI&quot;: service request with cookie(s)
+    &quot;(Fast)CGI&quot; -&gt; AllsemblyServices: service request with encrypted credentials
+    alt encrypted credentials authentic
+        AllsemblyServices -&gt; &quot;(Fast)CGI&quot;: request result
+        &quot;(Fast)CGI&quot; -&gt; UserAgent: request result
+    else credentials not authentic
+        AllsemblyServices -&gt; &quot;(Fast)CGI&quot;: error NotAuthenticated
+        &quot;(Fast)CGI&quot; -&gt; UserAgent: display login page (or status 401)
+    end
+
+else authentication failed
+    AllsemblyServices -&gt; &quot;(Fast)CGI&quot;: error NotAuthenticated
+    &quot;(Fast)CGI&quot; -&gt; UserAgent: display error message and allow retry
+
+end
+&#64;enduml
+"/>
+</p>
+<p>Text to explain the above figures: to be added.</p>
 </div>
 <div class="section" id="class-detail">
 <h2>Class detail<a class="headerlink" href="#class-detail" title="Permalink to this headline">¶</a></h2>
@@ -888,6 +1147,7 @@ recommendations.</p>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#future-possible-dependencies">Future possible dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#files">Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#specification-of-requirements-draft">Specification of requirements (draft)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#design-overview">Design overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#class-detail">Class detail</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#future-design">Future design</a></li>
@@ -896,7 +1156,7 @@ recommendations.</p>
 <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">GNU Free Documentation License</a></li>
 </ul>
 
 <div class="relations">
@@ -904,7 +1164,7 @@ recommendations.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="user_s_guide.html" title="previous chapter">User’s Guide</a></li>
-      <li>Next: <a href="license.html" title="next chapter">License</a></li>
+      <li>Next: <a href="license.html" title="next chapter">GNU Free Documentation License</a></li>
   </ul></li>
 </ul>
 </div>
