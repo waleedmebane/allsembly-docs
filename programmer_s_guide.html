@@ -49,7 +49,7 @@
 <div class="section" id="design-overview">
 <h2>Design overview<a class="headerlink" href="#design-overview" title="Permalink to this headline">¶</a></h2>
 <p class="plantuml">
-<img src="_images/plantuml-60128842aa493cac5fb1c9c1f8fa0cba4215f083.png" alt="&#64;startuml
+<img src="_images/plantuml-16e18ddf48e73bc0bd25247fed8b85acd3957f95.png" alt="&#64;startuml
 caption Figure 1
 class AllsemblyServer {
 -userauth_dbfilename: str
@@ -202,7 +202,7 @@ class AllsemblyServices(rpyc.Service) {
 
 GraphRequest o-- &quot;AllsemblyServices(rpyc.Service)&quot;
 LedgerRequest o-- &quot;AllsemblyServices(rpyc.Service)&quot;
-_UserAutheenticator o-- &quot;AllsemblyServices(rpyc.Service)&quot;
+_UserAuthenticator o-- &quot;AllsemblyServices(rpyc.Service)&quot;
 
 class UserServices {
 + check_commitments_for_consistency() (unused)
