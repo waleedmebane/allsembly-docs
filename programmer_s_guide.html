@@ -37,7 +37,7 @@
 <div class="section" id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
-<dt>Apache2</dt><dd><p>This is the web server.  Other web server’s could be substituted.  I chose Apache because it is the premier free and open source web server.  We can have confidence in its security and robustness, as much as is possible for web server software.</p>
+<dt>Apache2</dt><dd><p>This is the web server.  Other web servers could be substituted.  I chose Apache because it is the premier free and open source web server.  We can have confidence in its security and robustness, as much as is possible for web server software.</p>
 </dd>
 <dt>openssl</dt><dd><p>The Python encryption library “cryptography” and one of the password hashing libraries (the Python standard library’s “hashlib”) rely on openssl for encryption features.  It is the premier free and open source encryption library, widely used.</p>
 </dd>
@@ -72,9 +72,9 @@
 </dd>
 <dt>argon2-cffi</dt><dd><p>This provides the Argon2 password hashing algorithm.  It uses the C reference implementation.</p>
 </dd>
-<dt>cryptography</dt><dd><p>I am using this for AES-256 (symmetric) encryption, to encrypted a web login cookie.  It uses openssl for encryption.</p>
+<dt>cryptography</dt><dd><p>I am using this for AES-256 (symmetric) encryption, to encrypt a web login cookie.  It uses openssl for encryption.</p>
 </dd>
-<dt>python-daemon</dt><dd><p>This provides an easy APT for making a Python program run as a Unix daemon.</p>
+<dt>python-daemon</dt><dd><p>This provides an easy API for making a Python program run as a Unix daemon.</p>
 </dd>
 <dt>d3.js</dt><dd><p>This is a graphics library for web clients.  I am currently only using it for pan and zoom of scalable vector graphics (SVG) that is the format of the argument graph.  It could be used to draw alternative layouts of the argument graph on the client-side if desired, especially when accompanied by <em>d3-graphviz</em>.</p>
 </dd>
@@ -146,7 +146,7 @@
 </dd>
 <dt>allsembly_dev_demo.py*</dt><dd><p>FastCGI script for use with the Werkzeug library web server.  This allows for quick testing of Allsembly™ without a production web server like Apache.</p>
 </dd>
-<dt>allsembly-server.py*</dt><dd><p>Use this script to start the Allsembly™ server.  Run it with the <cite>–help</cite> option to get usage information.  Also, see, the section <a class="reference internal" href="installation_and_testing.html#installation-and-testing"><span class="std std-ref">Installation and Testing</span></a> for some instructions.</p>
+<dt>allsembly-server.py*</dt><dd><p>Use this script to start the Allsembly™ server.  Run it with the <code class="docutils literal notranslate"><span class="pre">--help</span></code> option to get usage information.  Also, see, the section <a class="reference internal" href="installation_and_testing.html#installation-and-testing"><span class="std std-ref">Installation and Testing</span></a> for some instructions.</p>
 </dd>
 <dt>server_config.py</dt><dd><p>Configuration file for allsembly-server.py–it is not intended to contain code.</p>
 </dd>
@@ -174,6 +174,7 @@
 <div class="section" id="design-overview">
 <h2>Design overview<a class="headerlink" href="#design-overview" title="Permalink to this headline">¶</a></h2>
 <p class="plantuml">
+<object data="_images/plantuml-8682815e6061502500d9bcbc9cec837655d1a150.svg" type="image/svg+xml" style="width:2237px;height:1812px;">
 <img src="_images/plantuml-8682815e6061502500d9bcbc9cec837655d1a150.png" alt="&#64;startuml
 page 1x2
 caption Figure 1
@@ -421,8 +422,10 @@ class BettingContract(Persistent) {
 &quot;ArgumentGraph(Persistent)&quot; --* &quot;BettingExchange(Persistent)&quot;
 &#64;enduml
 "/>
-</p>
+
+</object></p>
 <p class="plantuml">
+<object data="_images/plantuml-c556e88ebc435c6386db25cfe04e46f6ae5d35f0.svg" type="image/svg+xml" style="width:735px;height:558px;">
 <img src="_images/plantuml-c556e88ebc435c6386db25cfe04e46f6ae5d35f0.png" alt="&#64;startuml
 caption Figure 2
 UserAgent -&gt; &quot;(Fast)CGI&quot;: Authentication request
@@ -449,8 +452,8 @@ else authentication failed
 end
 &#64;enduml
 "/>
-</p>
-<p><em>I realize that the class diagram, Figure 1 above, is very small in the document.  For now, use your browser’s context menu to select an option like “view image” and zoom in to view the whole thing in a separate tab or window.</em></p>
+
+</object></p>
 <p>The client-side code is in the file “web/allsembly_demo.xsl”, with a separate page for login in the file “web/allsembly_demo_login.xsl”.  The client code is delivered to the web browser by the FastCGI script, “scripts/allsembly_demo.py”.  When a user visits the page hosting the script, e.g., <cite>https://my.webserver.com/cgi-bin/allsembly_demo.py</cite>, the script determines which content to deliver based on whether the user is logged in.  If the user is not logged in, it delivers an empty XML document that gives “allsembly_demo_login.xsl” as its default XML stylesheet template; otherwise, it delivers a document with “allsembly_demo.xsl” as its default.</p>
 <p>The browser generates the HTML and Javascript for the page from the directives in the XSL document.  In this case it is trivial.  If the user is already logged in, that is recognized from the contents of a login cookie.  The code for the Fast CGI that is invoked by the script, “scripts/allsembly_demo.py” is in the demo.py module.  It communicates with the Allsembly™ server using RPC (provided by the RPyC library).  The code on the Allsembly™ server side is in the rpyc_server.py module, especially the AllsemblyServices class.</p>
 <p>The interaction proceeds as shown in Figure 2, above.  Currently, since there is no interaction between users–each user is in a kind of <em>sandbox</em> of its own–which graph to display is dependent on which user is logged it (i.e., the userid in the encrypted login cookie).</p>
