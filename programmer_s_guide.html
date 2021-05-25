@@ -41,7 +41,7 @@
 </dd>
 <dt>openssl</dt><dd><p>The Python encryption library “cryptography” and one of the password hashing libraries (the Python standard library’s “hashlib”) rely on openssl for encryption features.  It is the premier free and open source encryption library, widely used.</p>
 </dd>
-<dt>Apache2 mod-fcgi</dt><dd><p>This starts the FastCGI scripts and communicates with them.  I plan to replace this with mod-proxy-fcgi (see below under <a class="reference internal" href="#future-possible-dependencies"><span class="std std-ref">Future possible dependencies</span></a>.</p>
+<dt>Apache2 mod-fcgid</dt><dd><p>This starts the FastCGI scripts and communicates with them.  I plan to replace this with mod-proxy-fcgi (see below under <a class="reference internal" href="#future-possible-dependencies"><span class="std std-ref">Future possible dependencies</span></a>.</p>
 </dd>
 </dl>
 <p>graphviz</p>
@@ -54,7 +54,7 @@
 </dd>
 <dt>PyGraphviz</dt><dd><p>Easy to use Python bindings to the Graphviz library.</p>
 </dd>
-<dt>json-rpc</dt><dd><p>A library for a simple form of remote procedure call (RPC) that is used for communication between the web client software and the server (CGI) software.  In the future the code using this should be improved to validate data and to ensure that the types of functions on client and server sides matche.  See <a class="reference internal" href="#user-data-validation-and-type-safety"><span class="std std-ref">User data validation and type safety</span></a>.</p>
+<dt>json-rpc</dt><dd><p>A library for a simple form of remote procedure call (RPC) that is used for communication between the web client software and the server (CGI) software.  In the future the code using this should be improved to validate data and to ensure that the data types of functions on client and server sides match.  See <a class="reference internal" href="#user-data-validation-and-type-safety"><span class="std std-ref">User data validation and type safety</span></a>.</p>
 </dd>
 <dt>Werkzeug</dt><dd><p>This provides classes for reading web CGI request data and constructing response data conveniently.  It also has a built-in, simple web server that can be used to play with the software without installing Apache.</p>
 </dd>
@@ -76,9 +76,9 @@
 </dd>
 <dt>python-daemon</dt><dd><p>This provides an easy APT for making a Python program run as a Unix daemon.</p>
 </dd>
-<dt>d3.js</dt><dd><p>This is a graphics library for web clients.  I am currently only using it for pan and zoom of scalable vector graphics (SVG) that is the format of the argument graph.  It could be used to draw alternative layouts of the argument graph on the client-side if desired, especially when accompanied by d3-graphviz.</p>
+<dt>d3.js</dt><dd><p>This is a graphics library for web clients.  I am currently only using it for pan and zoom of scalable vector graphics (SVG) that is the format of the argument graph.  It could be used to draw alternative layouts of the argument graph on the client-side if desired, especially when accompanied by <em>d3-graphviz</em>.</p>
 </dd>
-<dt>dialog-polyfill.js</dt><dd><p>This provides the HTML DIALOG tag and its functionality for browsers that don’t (fully) support it, yet.</p>
+<dt>dialog-polyfill.js</dt><dd><p>This provides the HTML DIALOG tag and its functionality for browsers that don’t (fully) support it, yet.  The DIALOG tag is used for creating the modal dialogs.</p>
 </dd>
 <dt>simple-jsonrpc-js.js</dt><dd><p>This provides the client side functions for JSON-RPC (remote procedure call) interaction.</p>
 </dd>
@@ -450,14 +450,19 @@ end
 &#64;enduml
 "/>
 </p>
-<p>Text to explain the above figures: to be added.</p>
+<p><em>I realize that the class diagram, Figure 1 above, is very small in the document.  For now, use your browser’s context menu to select an option like “view image” and zoom in to view the whole thing in a separate tab or window.</em></p>
+<p>The client-side code is in the file “web/allsembly_demo.xsl”, with a separate page for login in the file “web/allsembly_demo_login.xsl”.  The client code is delivered to the web browser by the FastCGI script, “scripts/allsembly_demo.py”.  When a user visits the page hosting the script, e.g., <cite>https://my.webserver.com/cgi-bin/allsembly_demo.py</cite>, the script determines which content to deliver based on whether the user is logged in.  If the user is not logged in, it delivers an empty XML document that gives “allsembly_demo_login.xsl” as its default XML stylesheet template; otherwise, it delivers a document with “allsembly_demo.xsl” as its default.</p>
+<p>The browser generates the HTML and Javascript for the page from the directives in the XSL document.  In this case it is trivial.  If the user is already logged in, that is recognized from the contents of a login cookie.  The code for the Fast CGI that is invoked by the script, “scripts/allsembly_demo.py” is in the demo.py module.  It communicates with the Allsembly™ server using RPC (provided by the RPyC library).  The code on the Allsembly™ server side is in the rpyc_server.py module, especially the AllsemblyServices class.</p>
+<p>The interaction proceeds as shown in Figure 2, above.  Currently, since there is no interaction between users–each user is in a kind of <em>sandbox</em> of its own–which graph to display is dependent on which user is logged it (i.e., the userid in the encrypted login cookie).</p>
+<p>The AllsemblyServices class uses a _UserAuthentication object to check the user’s authentication credentials and create the encrypted login cookie.  Subsequently, The UserServices object is used to provide each of the specific services that require login.  In most cases, the request is just added to a queue.  This is done for thread-safety since the RPyC server is multi-threaded.  The AllsemblyServices RPyC server object is running its event loop in a separate thread from the server main loop.</p>
+<p>The server main loop, allsembly.allsembly.AllsemblyServer.server_main_loop(), is started by the script, “scripts/allsembly-server.py”, and it, in turn, starts the RPyC service in a separate thread.  In the main loop, each queue is checked and the requests there are processed.  Most of the processing involves calling functions in an ArgumentGraph object.  There is a separate ArgumentGraph object for each graph and it is stored in a mapping that is persisted in the database.  The ArgumentGraph object draws a new graph and calculates new probabilities with each client request that changes the graph.  Currently, after the client makes a request that changes the graph, it immediately after that requests a new drawn graph.  The intention is that in a future version, the client would be subscribed to a server sent events or websockets channel or be waiting on a long poll, to learn when a new graph is ready to be loaded.</p>
 </div>
 <div class="section" id="class-detail">
 <h2>Class detail<a class="headerlink" href="#class-detail" title="Permalink to this headline">¶</a></h2>
 <p>For now this section just contains the docstrings from the modules.</p>
-<div class="section" id="allsembly-module">
-<h3><strong>allsembly</strong> module<a class="headerlink" href="#allsembly-module" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-allsembly.allsembly"></span><p>allsembly.py
+<div class="section" id="module-allsembly.allsembly">
+<span id="allsembly-module"></span><h3><strong>allsembly</strong> module<a class="headerlink" href="#module-allsembly.allsembly" title="Permalink to this headline">¶</a></h3>
+<p>allsembly.py
 Module for building the Allsembly™ server</p>
 <p>The server will be a script that reads
 in the configuration and then calls
@@ -597,9 +602,9 @@ False otherwise</p>
 </dd></dl>
 
 </div>
-<div class="section" id="rpyc-server-module">
-<h3><strong>rpyc_server</strong> module<a class="headerlink" href="#rpyc-server-module" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-allsembly.rpyc_server"></span><p>Provides the Allsembly services via RPC.
+<div class="section" id="module-allsembly.rpyc_server">
+<span id="rpyc-server-module"></span><h3><strong>rpyc_server</strong> module<a class="headerlink" href="#module-allsembly.rpyc_server" title="Permalink to this headline">¶</a></h3>
+<p>Provides the Allsembly services via RPC.
 The AllsemblyServices class is an RPyC (RPC server) which can be</p>
 <blockquote>
 <div><p>started to provide the services.</p>
@@ -799,9 +804,9 @@ Gets a read lock on the ledger data.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="demo-module">
-<h3><strong>demo</strong> module<a class="headerlink" href="#demo-module" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-allsembly.demo"></span><p>Contains functions for handling web requests and a function
+<div class="section" id="module-allsembly.demo">
+<span id="demo-module"></span><h3><strong>demo</strong> module<a class="headerlink" href="#module-allsembly.demo" title="Permalink to this headline">¶</a></h3>
+<p>Contains functions for handling web requests and a function
 “application(…)” that implements the CGI backend for the web services
 as a WSGI application.  WSGI is a Python web services standard.</p>
 <p>See allsembly_demo.py for an example of its use.</p>
@@ -824,9 +829,9 @@ Implements the login page as part of a WSGI application.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="user-module">
-<h3><strong>user</strong> module<a class="headerlink" href="#user-module" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-allsembly.user"></span><p>Classes containing user data and authentication data and
+<div class="section" id="module-allsembly.user">
+<span id="user-module"></span><h3><strong>user</strong> module<a class="headerlink" href="#module-allsembly.user" title="Permalink to this headline">¶</a></h3>
+<p>Classes containing user data and authentication data and
 a function, “add_user(…)”, for adding a user to the authentication
 database.</p>
 <dl class="py class">
@@ -849,9 +854,9 @@ settings.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="argument-graph-module">
-<h3><strong>argument_graph</strong> module<a class="headerlink" href="#argument-graph-module" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-allsembly.argument_graph"></span><p>Contains classes and functions for building arguments and for
+<div class="section" id="module-allsembly.argument_graph">
+<span id="argument-graph-module"></span><h3><strong>argument_graph</strong> module<a class="headerlink" href="#module-allsembly.argument_graph" title="Permalink to this headline">¶</a></h3>
+<p>Contains classes and functions for building arguments and for
 representing them in a graph, and also for representing a graph visually
 (currently by using GraphViz to produce an scalable vector graphics string).
 These classes and functions are used by the allsembly module.
@@ -916,9 +921,9 @@ that its parent is false</p>
 </dd></dl>
 
 </div>
-<div class="section" id="prob-logic-module">
-<h3><strong>prob_logic</strong> module<a class="headerlink" href="#prob-logic-module" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-allsembly.prob_logic"></span><p>Interface to the probabilistic logic code (currently using
+<div class="section" id="module-allsembly.prob_logic">
+<span id="prob-logic-module"></span><h3><strong>prob_logic</strong> module<a class="headerlink" href="#module-allsembly.prob_logic" title="Permalink to this headline">¶</a></h3>
+<p>Interface to the probabilistic logic code (currently using
 the Problog python package).</p>
 <dl class="py class">
 <dt id="allsembly.prob_logic.ProblogModel">
@@ -954,9 +959,9 @@ weights if no new arguments have been added–method taken from:
 </dd></dl>
 
 </div>
-<div class="section" id="betting-exchange-module">
-<h3><strong>betting_exchange</strong> module<a class="headerlink" href="#betting-exchange-module" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-allsembly.betting_exchange"></span><p>Classes representing the betting exchanges.  Not fully implemented.
+<div class="section" id="module-allsembly.betting_exchange">
+<span id="betting-exchange-module"></span><h3><strong>betting_exchange</strong> module<a class="headerlink" href="#module-allsembly.betting_exchange" title="Permalink to this headline">¶</a></h3>
+<p>Classes representing the betting exchanges.  Not fully implemented.
 These are not used in the current version.
 There will be one exchange per ‘issue’ containing one</p>
 <blockquote>
@@ -1088,9 +1093,9 @@ and their counterparts.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="speech-act-module">
-<h3><strong>speech_act</strong> module<a class="headerlink" href="#speech-act-module" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-allsembly.speech_act"></span><p>Classes for representing the kinds of actions that a participant
+<div class="section" id="module-allsembly.speech_act">
+<span id="speech-act-module"></span><h3><strong>speech_act</strong> module<a class="headerlink" href="#module-allsembly.speech_act" title="Permalink to this headline">¶</a></h3>
+<p>Classes for representing the kinds of actions that a participant
 can take in a dialogue.  These are used in user requests to the
 Allsembly server.  They will correspond to the formal dialogue
 specification, which is not yet included with the source package.
