@@ -1405,22 +1405,22 @@ otherwise, it may be useful to learn and reuseable knowledge.</p></li>
 <div class="section" id="coding-standards">
 <h2>Coding standards<a class="headerlink" href="#coding-standards" title="Permalink to this headline">¶</a></h2>
 <p>NOTE: This project is uses typed Python.  The mypy settings are in the
-file setup.cfg.  It uses all of the settings from mypy –strict
-(as of mypy version 0.812) except –disallow-subclassing-any, which
+file setup.cfg.  It uses all of the settings from <code class="docutils literal notranslate"><span class="pre">mypy</span> <span class="pre">--strict</span></code>
+(as of mypy version 0.812) except <code class="docutils literal notranslate"><span class="pre">--disallow-subclassing-any</span></code>, which
 is not used (especially) since some classes subclass “Persistent” in order
 to take advantage of the ZODB database.</p>
 <p>The modules may be type-checked using the following command from the
 command line from within the main directory of the project:
-<cite>mypy allsembly/*.py</cite>.  It should report no errors.</p>
+<code class="docutils literal notranslate"><span class="pre">mypy</span> <span class="pre">allsembly/*.py</span></code>.  It should report no errors.</p>
 <p>For more information about mypy or about optional type-checking in Python,
 see <a class="reference external" href="http://mypy-lang.org">http://mypy-lang.org</a>.</p>
-<p>Mypy may be installed with: <cite>python3.7 -m pip install mypy</cite>.</p>
+<p>Mypy may be installed with: <code class="docutils literal notranslate"><span class="pre">python3.7</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">mypy</span></code>.</p>
 <p>Settings for Pylint (see <a class="reference external" href="https://pylint.org">https://pylint.org</a>) are also in the setup.cfg file.
 With Pylint installed, the modules may be linted by running Pylint from the
 command line as follows:
-<cite>pylint –rcfile=setup.cfg allsembly</cite>.</p>
+<code class="docutils literal notranslate"><span class="pre">pylint</span> <span class="pre">--rcfile=setup.cfg</span> <span class="pre">allsembly</span></code>.</p>
 <p>The Pylint settings in setup.cfg correspond to:
-<cite>pylint –disable=all -enable F,E,W –disable=python3</cite>.
+<code class="docutils literal notranslate"><span class="pre">pylint</span> <span class="pre">--disable=all</span> <span class="pre">-enable</span> <span class="pre">F,E,W</span> <span class="pre">--disable=python3</span></code>.
 This will report many warnings, mostly about unused variables and two
 errors about imports.  The errors are false positives as far as I can
 tell.  The module is successfully using the imported class (OOBTree).
