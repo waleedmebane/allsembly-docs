@@ -937,10 +937,15 @@ and do the inference.
 Uses “virtual evidence”: uncertain evidence is modelled with
 a probabilistic rule, where the probability is the certainty
 of the evidence; the antecedent is virtual evidence, with
-probability 1, and the consequent is the real evidence.
-Can update the model by reusing the same program with different
-weights if no new arguments have been added–method taken from:
-<a class="reference external" href="https://dtai.cs.kuleuven.be/problog/tutorial/01-compile-once.html">https://dtai.cs.kuleuven.be/problog/tutorial/01-compile-once.html</a></p>
+probability 1, and the consequent is the real evidence.</p>
+<p>Note that the current Problog models (constructed in ArgumentGraph 
+methods, _add_clause_to_problog_program(), 
+_add_virtual_evidence_to_problog_program(), and
+_add_term_and_query_to_problog_program())
+are not necessarily the best for all 
+kinds of arguments.  The For example, the inference in causal arguments 
+might only go in one direction.  Dealing most appropriately with 
+all major types is a longer-term goal.</p>
 <dl class="py method">
 <dt id="allsembly.prob_logic.ProblogModel.add_terms">
 <code class="sig-name descname"><span class="pre">add_terms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_terms</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#allsembly.prob_logic.ProblogModel.add_terms" title="Permalink to this definition">¶</a></dt>
