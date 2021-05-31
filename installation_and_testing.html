@@ -115,7 +115,8 @@ and give that user permission to read and write /var/allsembly/data</p>
 <p>Add an Allsembly™ user:</p>
 <p>This should ideally be done while the Allsembly™ server
 is not running.</p>
-<div class="highlight-sudo notranslate"><div class="highlight"><pre><span></span>allsembly-prototype/scripts/allsembly_add_user.py
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">su</span> <span class="n">allsembly</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span>
+<span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">allsembly_add_user</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 <p>Follow the prompts.<br />
@@ -126,9 +127,10 @@ Then:</p>
 <p>Run the Allsembly™ server:</p>
 <p>Before running the server, you may change any configuration settings
 in the server_config.py file.</p>
-<div class="highlight-cd notranslate"><div class="highlight"><pre><span></span>sudo su allsembly -s /bin/bash
-./allsembly-server.py --daemon
-exit
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">scripts</span>
+<span class="n">sudo</span> <span class="n">su</span> <span class="n">allsembly</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span>
+<span class="o">./</span><span class="n">allsembly</span><span class="o">-</span><span class="n">server</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">daemon</span>
+<span class="n">exit</span>
 </pre></div>
 </div>
 <p>NOTE: to get it to persist across reboots, you will need a service script
@@ -167,7 +169,8 @@ certificate: https://certbot.eff.org</p>
 <p>Copy the FastCGI script into that directory:</p>
 <p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">cp</span> <span class="pre">-i</span> <span class="pre">allsembly-prototype/scripts/allsembly_demo.py</span> <span class="pre">/usr/local/apache2/cgi-bin/</span></code></p>
 <p>Move the web files to the web root:</p>
-<div class="highlight-sudo notranslate"><div class="highlight"><pre><span></span>sudo cp -ir allsembly-prototype/web/* /var/www/html/allsembly
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">allsembly</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="o">-</span><span class="n">ir</span> <span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">web</span><span class="o">/*</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">allsembly</span>
 </pre></div>
 </div>
 <p>Restart the Apache server:</p>
@@ -192,7 +195,7 @@ Enter the userid and password of the user you created in a previous step.</p>
 </pre></div>
 </div>
 <p>Start the development server:</p>
-<p>allsembly-prototype/scripts/allsembly_dev_demo.py -c ‘/home/<your-linux-userid>/allsembly_test_cert/’ -w ‘allsembly-prototype/web/’</p>
+<p><code class="docutils literal notranslate"><span class="pre">allsembly-prototype/scripts/allsembly_dev_demo.py</span> <span class="pre">-c</span> <span class="pre">'/home/&lt;your-linux-userid&gt;/allsembly_test_cert/'</span> <span class="pre">-w</span> <span class="pre">'allsembly-prototype/web/'</span></code></p>
 <p>That will start a server running on locahost port 8443.
 If you are running the server on a remote machine, use the -s or –host option
 to give the IP address of the server.  You should also create your SSL
