@@ -46,8 +46,8 @@ web/scripts</p>
 LICENSE.third-party.  The respective license terms file has its
 suffix named after the name of the library.</p>
 </div>
-<div class="section" id="how-to-install-for-ubuntu-16-04">
-<h2>How to install (for Ubuntu 16.04)<a class="headerlink" href="#how-to-install-for-ubuntu-16-04" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="how-to-install-for-ubuntu-16-04-or-ubuntu-18-04">
+<h2>How to install (for Ubuntu 16.04 or Ubuntu 18.04)<a class="headerlink" href="#how-to-install-for-ubuntu-16-04-or-ubuntu-18-04" title="Permalink to this headline">¶</a></h2>
 <p>Dependencies:
 Python &gt;=3.7 (tested with Python 3.7.4)
 pip
@@ -74,7 +74,7 @@ typing
 python-daemon</p>
 <p>Install Apache2, mod-fcgid, openssl, and graphviz:</p>
 <p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">apache2</span> <span class="pre">libapache2-mod-fcgid</span> <span class="pre">openssl</span> <span class="pre">graphviz</span> <span class="pre">graphviz-dev</span></code></p>
-<p>Next, install Python.  If you are using Ubuntu 16.04, you will need to
+<p>Next, install Python.  If you are using Ubuntu 16.04 or 18.04, you will need to
 install from source.  With later versions of Ubuntu you may be able
 to install using <code class="docutils literal notranslate"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3</span></code> (you need a Python version &gt;=3.7),
 but it will place Python in /usr/bin; so you will either have to modify the
@@ -220,9 +220,9 @@ near the top of your /etc/apt/sources.list file and then run
 </div>
 <div class="section" id="how-to-install-for-other-platforms">
 <h2>How to install for other platforms<a class="headerlink" href="#how-to-install-for-other-platforms" title="Permalink to this headline">¶</a></h2>
-<p>The software has only been tested with Ubuntu 16.04; however, I believe
-that the only platform specific parts are the <code class="docutils literal notranslate"><span class="pre">--daemon</span></code> option, the
-<code class="docutils literal notranslate"><span class="pre">--user</span></code> option and platform specific file paths.  These should
+<p>The software has only been tested with Ubuntu 16.04 and 18.04;
+however, I believe that the only platform specific parts are the <code class="docutils literal notranslate"><span class="pre">--daemon</span></code>
+option, the <code class="docutils literal notranslate"><span class="pre">--user</span></code> option and platform specific file paths.  These should
 work on many other Unix-like or Unix operating systems.  So it might
 work with MacOS.  The allsembly-server.py script might run under Windows
 if you set all of the file options with Windows-specific pathnames and
@@ -266,7 +266,7 @@ distribution by typing <code class="docutils literal notranslate"><span class="p
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation and Testing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-install-for-ubuntu-16-04">How to install (for Ubuntu 16.04)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-install-for-ubuntu-16-04-or-ubuntu-18-04">How to install (for Ubuntu 16.04 or Ubuntu 18.04)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#how-to-install-for-other-platforms">How to install for other platforms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#how-to-run-the-tests">How to run the tests</a></li>
 </ul>
