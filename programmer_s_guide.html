@@ -702,7 +702,7 @@ remote procedure calls (RPC)</p>
 
 <dl class="py class">
 <dt id="allsembly.rpyc_server.AllsemblyServices.UserServices">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">UserServices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">services</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.AllsemblyServices" title="allsembly.rpyc_server.AllsemblyServices"><span class="pre">allsembly.rpyc_server.AllsemblyServices</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">credentials</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#allsembly.rpyc_server.AuthCredentialsStr" title="allsembly.rpyc_server.AuthCredentialsStr"><span class="pre">allsembly.rpyc_server.AuthCredentialsStr</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.UserServices" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">UserServices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">services</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.AllsemblyServices" title="allsembly.rpyc_server.AllsemblyServices"><span class="pre">allsembly.rpyc_server.AllsemblyServices</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">userid</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.UserServices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide services requiring user authentication.
 An instance can only be created by providing authentic
 credentials.  Otherwise, the exception
@@ -759,26 +759,6 @@ and password matches; None, otherwise</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="allsembly.rpyc_server.AllsemblyServices.exposed_get_user_services">
-<code class="sig-name descname"><span class="pre">exposed_get_user_services</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">credentials</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#allsembly.rpyc_server.AuthCredentialsStr" title="allsembly.rpyc_server.AuthCredentialsStr"><span class="pre">allsembly.rpyc_server.AuthCredentialsStr</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#allsembly.rpyc_server.AllsemblyServices.UserServices" title="allsembly.rpyc_server.AllsemblyServices.UserServices"><span class="pre">allsembly.rpyc_server.AllsemblyServices.UserServices</span></a><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.exposed_get_user_services" title="Permalink to this definition">¶</a></dt>
-<dd><p>If authentication with the provided credentials is successful,
-Returns a class instance that provides the services that require
-authentication.
-Otherwise, UserServices will raise an exception,
-“AllsemblyServices.NotAuthenticated” that should be handled by
-the caller.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="allsembly.rpyc_server.AllsemblyServices.exposed_get_user_services_noexcept">
-<code class="sig-name descname"><span class="pre">exposed_get_user_services_noexcept</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">credentials</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#allsembly.rpyc_server.AuthCredentialsStr" title="allsembly.rpyc_server.AuthCredentialsStr"><span class="pre">allsembly.rpyc_server.AuthCredentialsStr</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#allsembly.rpyc_server.AllsemblyServices.UserServices" title="allsembly.rpyc_server.AllsemblyServices.UserServices"><span class="pre">allsembly.rpyc_server.AllsemblyServices.UserServices</span></a><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.exposed_get_user_services_noexcept" title="Permalink to this definition">¶</a></dt>
-<dd><p>If authentication with the provided credentials is successful,
-Returns a class instance that provides the services that require
-authentication.
-Otherwise, returns None.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt id="allsembly.rpyc_server.AllsemblyServices.on_connect">
 <code class="sig-name descname"><span class="pre">on_connect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.on_connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>called when the connection is established</p>
@@ -829,7 +809,7 @@ Otherwise, returns None.</p>
 
 <dl class="py class">
 <dt id="allsembly.rpyc_server.GraphRequest">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.rpyc_server.</span></code><code class="sig-name descname"><span class="pre">GraphRequest</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issues</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.argument_graph.Issues" title="allsembly.argument_graph.Issues"><span class="pre">allsembly.argument_graph.Issues</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.GraphRequest" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.rpyc_server.</span></code><code class="sig-name descname"><span class="pre">GraphRequest</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issues</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.argument_graph.IssuesDBAccessor" title="allsembly.argument_graph.IssuesDBAccessor"><span class="pre">allsembly.argument_graph.IssuesDBAccessor</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.GraphRequest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides a thread-safe way to get data from the argument
 graph.
 In particular, use this to draw the SVG representation
@@ -888,30 +868,8 @@ therefore, ready for processing.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-allsembly.demo">
-<span id="demo-module"></span><h3><strong>demo</strong> module<a class="headerlink" href="#module-allsembly.demo" title="Permalink to this headline">¶</a></h3>
-<p>Contains functions for handling web requests and a function
-“application(…)” that implements the CGI backend for the web services
-as a WSGI application.  WSGI is a Python web services standard.</p>
-<p>See allsembly_demo.py for an example of its use.</p>
-<p>Look in the files “allsembly-prototype/web/allsembly_demo.xsl”
-and “allsembly-prototype/web/allsembly_demo_login.xsl” to see the
-requests that are sent in the current implementation.</p>
-<dl class="py function">
-<dt id="allsembly.demo.application">
-<code class="sig-prename descclassname"><span class="pre">allsembly.demo.</span></code><code class="sig-name descname"><span class="pre">application</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environ</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_response</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="headerlink" href="#allsembly.demo.application" title="Permalink to this definition">¶</a></dt>
-<dd><p>A WSGI application implementing the connection between
-the web and the Allsembly server and providing the web
-services.  WSGI is a Python web services standard.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="allsembly.demo.login">
-<code class="sig-prename descclassname"><span class="pre">allsembly.demo.</span></code><code class="sig-name descname"><span class="pre">login</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="headerlink" href="#allsembly.demo.login" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only for use within the application(…) function.
-Implements the login page as part of a WSGI application.</p>
-</dd></dl>
-
+<div class="section" id="demo-module">
+<h3><strong>demo</strong> module<a class="headerlink" href="#demo-module" title="Permalink to this headline">¶</a></h3>
 </div>
 <div class="section" id="module-allsembly.user">
 <span id="user-module"></span><h3><strong>user</strong> module<a class="headerlink" href="#module-allsembly.user" title="Permalink to this headline">¶</a></h3>
@@ -996,6 +954,26 @@ that its parent is false</p>
 <dt id="allsembly.argument_graph.Issues">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.argument_graph.</span></code><code class="sig-name descname"><span class="pre">Issues</span></code><a class="headerlink" href="#allsembly.argument_graph.Issues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores argument graphs for all issues.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="allsembly.argument_graph.IssuesDBAccessor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.argument_graph.</span></code><code class="sig-name descname"><span class="pre">IssuesDBAccessor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ZODB.DB.DB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_only</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.argument_graph.IssuesDBAccessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate one of these with a ZODB database object and pass it
+to another thread or threads.
+In the other thread(s) obtain an issues object from the database
+using the context manager by calling get_context() as part of
+a ‘with’ statement, e.g.:</p>
+<p>… # set backend
+db = ZODB.DB(my_backend)
+issue_access = IssuesDBAccessor(db)
+… # pass issue_access into thread class and start thread
+# in new thread (‘my_iss_access’ is a local variable corresponding to
+# ‘issue_access’)
+with my_iss_access.get_context() as issues:</p>
+<blockquote>
+<div><p>diagram_svg: str = issues.graph[issue_id].get_drawn_graph()</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py class">
