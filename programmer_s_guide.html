@@ -39,9 +39,9 @@
 <dl class="simple">
 <dt>Apache2</dt><dd><p>This is the web server.  Other web servers could be substituted.  I chose Apache because it is the premier free and open source web server.  We can have confidence in its security and robustness, as much as is possible for web server software.</p>
 </dd>
-<dt>openssl</dt><dd><p>The Python encryption library “cryptography” and one of the password hashing libraries (the Python standard library’s “hashlib”) rely on openssl for encryption features.  It is the premier free and open source encryption library, widely used.</p>
+<dt>Apache2 mod_wsgi</dt><dd><p>For interacting with Django (using the Python WSGI standard directly instead of CGI)</p>
 </dd>
-<dt>Apache2 mod-fcgid</dt><dd><p>This starts the FastCGI scripts and communicates with them.  I plan to replace this with mod-proxy-fcgi (see below under <a class="reference internal" href="#future-possible-dependencies"><span class="std std-ref">Future possible dependencies</span></a>.</p>
+<dt>openssl</dt><dd><p>The Python encryption library “cryptography” and one of the password hashing libraries (the Python standard library’s “hashlib”) rely on openssl for encryption features.  It is the premier free and open source encryption library, widely used.</p>
 </dd>
 </dl>
 <p>graphviz</p>
@@ -54,12 +54,6 @@
 </dd>
 <dt>PyGraphviz</dt><dd><p>Easy to use Python bindings to the Graphviz library.</p>
 </dd>
-<dt>json-rpc</dt><dd><p>A library for a simple form of remote procedure call (RPC) that is used for communication between the web client software and the server (CGI) software.  In the future the code using this should be improved to validate data and to ensure that the data types of functions on client and server sides match.  See <a class="reference internal" href="#user-data-validation-and-type-safety"><span class="std std-ref">User data validation and type safety</span></a>.</p>
-</dd>
-<dt>Werkzeug</dt><dd><p>This provides classes for reading web CGI request data and constructing response data conveniently.  It also has a built-in, simple web server that can be used to play with the software without installing Apache.</p>
-</dd>
-<dt>flup</dt><dd><p>Threaded FastCGI client that adapts the FastCGI API to WSGI, a Python web standard.  So we can use a WSGI application to serve FastCGI responses.</p>
-</dd>
 <dt>RPyC</dt><dd><p>Python to Python RPC used to communicate between the FastCGI script and the Allsembly™ server.  This will no longer be needed when we switch to mod-proxy-fcgi and incorporate the FastCGI directly into the Allsembly™ server.  (See <a class="reference internal" href="#future-possible-dependencies"><span class="std std-ref">Future possible dependencies</span></a>.)  However, it could be useful later for implementing communication with a registration server.  (See <a class="reference internal" href="#design-for-confidentiality"><span class="std std-ref">Design for confidentiality</span></a>.)</p>
 </dd>
 <dt>persistent</dt><dd><p>This works with ZODB to automatically save and restore objects that subclass “Persistent”.</p>
@@ -69,10 +63,6 @@
 <dt>atomic</dt><dd><p>This provides an atomically updatable integer class.</p>
 </dd>
 <dt>readerwriterlock</dt><dd><p>This provides thread synchronization using separate locks for readers and writers.  There can be multiple readers but only one writer.</p>
-</dd>
-<dt>argon2-cffi</dt><dd><p>This provides the Argon2 password hashing algorithm.  It uses the C reference implementation.</p>
-</dd>
-<dt>cryptography</dt><dd><p>I am using this for AES-256 (symmetric) encryption, to encrypt a web login cookie.  It uses openssl for encryption.</p>
 </dd>
 <dt>python-daemon</dt><dd><p>This provides an easy API for making a Python program run as a Unix daemon.</p>
 </dd>
@@ -87,11 +77,7 @@
 <div class="section" id="future-possible-dependencies">
 <h2>Future possible dependencies<a class="headerlink" href="#future-possible-dependencies" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
-<dt>Apache2 mod-proxy-fcgi</dt><dd><p>to replace mod-fcgid.  This Apache2 module connects to the already running FastCGI program rather than starting it.  So, we won’t need a separate FastCGI script.  The FastCGI can be directly integrated into the server.  The same approach works with other web servers, and I believe it is the standard way.  I did not, at first, realize that this option was available with Apache2.  The software will appear to be more responsive since Apache won’t need to start new FastCGI scripts to process requests; it will send them to the already running (threaded) server.</p>
-</dd>
 <dt>GPGME</dt><dd><p>for encrypting the stream encryption keys with the public key(s) of the admins.  (The stream encryption key will also be encrypted with the user’s hashed password.)  See more details about this in the section <a class="reference internal" href="#design-for-confidentiality"><span class="std std-ref">Design for confidentiality</span></a>, below).</p>
-</dd>
-<dt>Pydantic</dt><dd><p>to validate incoming user provided data (getting some validation almost for free as a side-effect of using static types).</p>
 </dd>
 <dt>PyNaCl</dt><dd><p>for stream encryption or salsa20 to encrypt a database field containing users’ anonymized ids (see more details about this in the section <a class="reference internal" href="#design-for-confidentiality"><span class="std std-ref">Design for confidentiality</span></a>, below).</p>
 </dd>
@@ -117,6 +103,19 @@
 <div class="line">allsembly/</div>
 <div class="line-block">
 <div class="line">All of the modules of the Python package</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">django_app/</div>
+<div class="line-block">
+<div class="line">App for communicating with users to log them in and to generate</div>
+<div class="line">the html and JavaScript of the site.  It communicates with the</div>
+<div class="line">AllsemblyServer to provide the services.</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">django_site/</div>
+<div class="line-block">
+<div class="line">Configuration information for the Django site, which uses the</div>
+<div class="line">Django app, the code for which is in the django_app directory.</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">docs/</div>
@@ -163,33 +162,15 @@
 <div class="line"><br /></div>
 <div class="line">prospectus.pdf</div>
 <div class="line"><br /></div>
+<div class="line">how_it_works.md</div>
+<div class="line"><br /></div>
 </div>
 <div class="line">scripts/</div>
 <div class="line"><br /></div>
 <div class="line-block">
-<div class="line">allsembly_add_user.py*</div>
-<div class="line-block">
-<div class="line">Use this to add new Allsembly™ users.  It is better to do this when the Allsembly™ server is not running.</div>
-<div class="line"><br /></div>
-</div>
-<div class="line">allsembly_demo.py*</div>
-<div class="line-block">
-<div class="line">FastCGI script for providing the Allsembly™ services.  The client communicates with the web server (Apache) which communicates with the FastCGI script, starting it and stopping it when expedient, and the FastCGI script communicates with the Allsembly™ server.</div>
-<div class="line"><br /></div>
-</div>
-<div class="line">allsembly_dev_demo.py*</div>
-<div class="line-block">
-<div class="line">FastCGI script for use with the Werkzeug library web server.  This allows for quick testing of Allsembly™ without a production web server like Apache.</div>
-<div class="line"><br /></div>
-</div>
 <div class="line">allsembly-server.py*</div>
 <div class="line-block">
 <div class="line">Use this script to start the Allsembly™ server.  Run it with the <code class="docutils literal notranslate"><span class="pre">--help</span></code> option to get usage information.  Also, see, the section <a class="reference internal" href="installation_and_testing.html#installation-and-testing"><span class="std std-ref">Installation and Testing</span></a> for some instructions.</div>
-<div class="line"><br /></div>
-</div>
-<div class="line">server_config.py</div>
-<div class="line-block">
-<div class="line">Configuration file for allsembly-server.py–it is not intended to contain code.</div>
 <div class="line"><br /></div>
 </div>
 </div>
@@ -199,18 +180,7 @@
 <div class="line"><br /></div>
 </div>
 <div class="line">web/</div>
-<div class="line"><br /></div>
 <div class="line-block">
-<div class="line">allsembly_demo_login.xsl</div>
-<div class="line-block">
-<div class="line">XML stylesheet template for constructing the login page: The server currently just produces an empty XML document with this as its default XSL template.  So, all of the information to produce the page is actually in this file.  See <a class="reference internal" href="#localization"><span class="std std-ref">Localization</span></a> for information about how XML might be used in the future.</div>
-<div class="line"><br /></div>
-</div>
-<div class="line">allsembly_demo.xsl</div>
-<div class="line-block">
-<div class="line">XML stylesheet template for constructing the demo page.</div>
-<div class="line"><br /></div>
-</div>
 <div class="line">scripts/</div>
 <div class="line-block">
 <div class="line">The javascript libraries</div>
@@ -231,8 +201,8 @@ via HTTP; maintain a stable client interface.</p>
 <div class="section" id="design-overview">
 <h2>Design overview<a class="headerlink" href="#design-overview" title="Permalink to this headline">¶</a></h2>
 <p class="plantuml">
-<object data="_images/plantuml-8682815e6061502500d9bcbc9cec837655d1a150.svg" type="image/svg+xml" style="width:2237px;height:1812px;">
-<img src="_images/plantuml-8682815e6061502500d9bcbc9cec837655d1a150.png" alt="&#64;startuml
+<object data="_images/plantuml-b8ed7ef298ba65da0253d244ed29f474c5a80a11.svg" type="image/svg+xml" style="width:1484px;height:1611px;">
+<img src="_images/plantuml-b8ed7ef298ba65da0253d244ed29f474c5a80a11.png" alt="&#64;startuml
 page 1x2
 caption Figure 1
 
@@ -280,20 +250,6 @@ class LedgerRequest {
 {field} (unused)
 }
 
-class _UserAuthenticator {
-- userauth_dbfilename: str
-- user_dbfilename: str
-- authdb_storage: ZODB..FileStorage
-- userdb_storage: ZODB..FileStorage
-- authdb: ZODB.DB
-- userdb: ZODB.DB
-- authdb_conn: ZODB..Connection
-- userdb_conn: ZODB..Connection
-- _fernet_cryptor: bytes
-- {field} userid_salt (unused)
-+ authenticate_user()
-+ close_databases()
-}
 
 class &quot;AllsemblyServices(rpyc.Service)&quot; as AllsemblyServices {
 - order_queue: deque[Tuple]
@@ -373,31 +329,6 @@ class ArgumentNode(Persistent) {
 &quot;Issues(Persistent)&quot; *-- AllsemblyServer: &lt;&lt;create&gt;&gt;
 IssueQueue *-- AllsemblyServer: &lt;&lt;create&gt;&gt;
 &quot;Issues(Persistent)&quot; o-- IssueQueue
-_UserAuthenticator &lt;.. AllsemblyServer: &lt;&lt;create&gt;&gt;
-
-package user.py {
-class UserAuth(Persistent) {
-userid_hashed: bytes
-password_hashed: bytes
-pwd_salt: bytes
-}
-
-class UserInfo(Persistent) {
-userid_hashed: bytes
-last_login: int
-{field} current_isssue: int (unused)
-{field} current_subuser: str (unused)
-{field} subusers: PersistentMapping (unused)
-}
-
-class UserClientSettings(Persistent) {
-{field} (unused)
-}
-}
-
-_UserAuthenticator &quot;1&quot; o.. &quot;0..*&quot; &quot;UserAuth(Persistent)&quot;
-_UserAuthenticator &quot;1&quot; o.. &quot;0..*&quot; &quot;UserInfo(Persistent)&quot;
-&quot;UserInfo(Persistent)&quot; *-- &quot;UserClientSettings(Persistent)&quot;
 
 
 &quot;Issues(Persistent)&quot; o-- GraphRequest
@@ -405,7 +336,6 @@ _UserAuthenticator &quot;1&quot; o.. &quot;0..*&quot; &quot;UserInfo(Persistent)
 
 GraphRequest o-- AllsemblyServices
 LedgerRequest o-- AllsemblyServices
-_UserAuthenticator o-- AllsemblyServices
 
 UserServices &lt;--+ AllsemblyServices
 
@@ -482,39 +412,28 @@ class BettingContract(Persistent) {
 
 </object></p>
 <p class="plantuml">
-<object data="_images/plantuml-c556e88ebc435c6386db25cfe04e46f6ae5d35f0.svg" type="image/svg+xml" style="width:735px;height:558px;">
-<img src="_images/plantuml-c556e88ebc435c6386db25cfe04e46f6ae5d35f0.png" alt="&#64;startuml
+<object data="_images/plantuml-758dd1cff7027f9067dd49e768660b13d97bfa83.svg" type="image/svg+xml" style="width:578px;height:279px;">
+<img src="_images/plantuml-758dd1cff7027f9067dd49e768660b13d97bfa83.png" alt="&#64;startuml
 caption Figure 2
-UserAgent -&gt; &quot;(Fast)CGI&quot;: Authentication request
-&quot;(Fast)CGI&quot; -&gt; AllsemblyServices: Process auth request
+UserAgent -&gt; &quot;Django app&quot;: Authentication request
 
 alt sucessful authentication
 
-    AllsemblyServices -&gt; &quot;(Fast)CGI&quot;: encrypted cookie
-    &quot;(Fast)CGI&quot; -&gt; UserAgent: set cookie
-    UserAgent -&gt; &quot;(Fast)CGI&quot;: service request with cookie(s)
-    &quot;(Fast)CGI&quot; -&gt; AllsemblyServices: service request with encrypted credentials
-    alt encrypted credentials authentic
-        AllsemblyServices -&gt; &quot;(Fast)CGI&quot;: request result
-        &quot;(Fast)CGI&quot; -&gt; UserAgent: request result
-    else credentials not authentic
-        AllsemblyServices -&gt; &quot;(Fast)CGI&quot;: error NotAuthenticated
-        &quot;(Fast)CGI&quot; -&gt; UserAgent: display login page (or status 401)
-    end
+    UserAgent -&gt; &quot;Django app&quot;: service request with logged in session
+    &quot;Django app&quot; -&gt; AllsemblyServices: service request
 
 else authentication failed
-    AllsemblyServices -&gt; &quot;(Fast)CGI&quot;: error NotAuthenticated
-    &quot;(Fast)CGI&quot; -&gt; UserAgent: display error message and allow retry
+    &quot;Django app&quot; -&gt; UserAgent: Redirect to login page with error message
 
 end
 &#64;enduml
 "/>
 
 </object></p>
-<p>The client-side code is in the file “web/allsembly_demo.xsl”, with a separate page for login in the file “web/allsembly_demo_login.xsl”.  The client code is delivered to the web browser by the FastCGI script, “scripts/allsembly_demo.py”.  When a user visits the page hosting the script, e.g., <cite>https://my.webserver.com/cgi-bin/allsembly_demo.py</cite>, the script determines which content to deliver based on whether the user is logged in.  If the user is not logged in, it delivers an empty XML document that gives “allsembly_demo_login.xsl” as its default XML stylesheet template; otherwise, it delivers a document with “allsembly_demo.xsl” as its default.</p>
-<p>The browser generates the HTML and Javascript for the page from the directives in the XSL document.  In this case it is trivial.  If the user is already logged in, that is recognized from the contents of a login cookie.  The code for the Fast CGI that is invoked by the script, “scripts/allsembly_demo.py” is in the demo.py module.  It communicates with the Allsembly™ server using RPC (provided by the RPyC library).  The code on the Allsembly™ server side is in the rpyc_server.py module, especially the AllsemblyServices class.</p>
+<p>The client-side code is generated by the Django templates in django_app/templates according to the code in django_app/views.py.</p>
+<p>It communicates with the Allsembly™ server using RPC (provided by the RPyC library).  The code on the Allsembly™ server side is in the rpyc_server.py module, especially the AllsemblyServices class.</p>
 <p>The interaction proceeds as shown in Figure 2, above.  Currently, since there is no interaction between users–each user is in a kind of <em>sandbox</em> of its own–which graph to display is dependent on which user is logged it (i.e., the userid in the encrypted login cookie).</p>
-<p>The AllsemblyServices class uses a _UserAuthentication object to check the user’s authentication credentials and create the encrypted login cookie.  Subsequently, The UserServices object is used to provide each of the specific services that require login.  In most cases, the request is just added to a queue.  This is done for thread-safety since the RPyC server is multi-threaded.  The AllsemblyServices RPyC server object is running its event loop in a separate thread from the server main loop.</p>
+<p>The UserServices object is used to provide each of the specific services that require login, and it is provided with a login username by the django_app, which must have logged in the user.  In most cases, the request is just added to a queue.  The AllsemblyServices RPyC server object is running its event loop in a separate thread from the server main loop.</p>
 <p>The server main loop, allsembly.allsembly.AllsemblyServer.server_main_loop(), is started by the script, “scripts/allsembly-server.py”, and it, in turn, starts the RPyC service in a separate thread.  In the main loop, each queue is checked and the requests there are processed.  Most of the processing involves calling functions in an ArgumentGraph object.  There is a separate ArgumentGraph object for each graph and it is stored in a mapping that is persisted in the database.  The ArgumentGraph object draws a new graph and calculates new probabilities with each client request that changes the graph.  Currently, after the client makes a request that changes the graph, it immediately after that requests a new drawn graph.  The intention is that in a future version, the client would be subscribed to a server sent events or websockets channel or be waiting on a long poll, to learn when a new graph is ready to be loaded.</p>
 </div>
 <div class="section" id="class-detail">
@@ -567,7 +486,7 @@ of the truth value of sets of statements.</p>
 </div></blockquote>
 <dl class="py class">
 <dt id="allsembly.allsembly.AllsemblyServer">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.allsembly.</span></code><code class="sig-name descname"><span class="pre">AllsemblyServer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userauth_dbfilename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_dbfilename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_dbfilename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.allsembly.AllsemblyServer" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.allsembly.</span></code><code class="sig-name descname"><span class="pre">AllsemblyServer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_dbfilename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_dbfilename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.allsembly.AllsemblyServer" title="Permalink to this definition">¶</a></dt>
 <dd><p>server_main_loop function starts the server
 I put it in a class so that its data can be saved
 to be inspected after the server exits.
@@ -670,9 +589,6 @@ The AllsemblyServices class is an RPyC (RPC server) which can be</p>
 <div><p>started to provide the services.</p>
 </div></blockquote>
 <dl class="simple">
-<dt>It needs to be provided with an _UserAutheticator object that</dt><dd><p>enables it to authenticate a user from the credentials stored
-in a database.</p>
-</dd>
 <dt>And it needs to be provided with queues onto which to place</dt><dd><p>the requests that will be handled elsewhere.
 (See the module “allsembly”.)</p>
 </dd>
@@ -692,7 +608,7 @@ the requests through thread safe queues and request objects.</p>
 </dl>
 <dl class="py class">
 <dt id="allsembly.rpyc_server.AllsemblyServices">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.rpyc_server.</span></code><code class="sig-name descname"><span class="pre">AllsemblyServices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order_queue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.OrderQueue" title="allsembly.rpyc_server.OrderQueue"><span class="pre">allsembly.rpyc_server.OrderQueue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_arg_queue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.GraphUpdateArgQueue" title="allsembly.rpyc_server.GraphUpdateArgQueue"><span class="pre">allsembly.rpyc_server.GraphUpdateArgQueue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_pos_queue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.GraphUpdatePosQueue" title="allsembly.rpyc_server.GraphUpdatePosQueue"><span class="pre">allsembly.rpyc_server.GraphUpdatePosQueue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">issue_queue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">allsembly.rpyc_server.IssueQueue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_req</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.GraphRequest" title="allsembly.rpyc_server.GraphRequest"><span class="pre">allsembly.rpyc_server.GraphRequest</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ledger_req</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.LedgerRequest" title="allsembly.rpyc_server.LedgerRequest"><span class="pre">allsembly.rpyc_server.LedgerRequest</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_auth</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">allsembly.rpyc_server._UserAuthenticator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.rpyc_server.</span></code><code class="sig-name descname"><span class="pre">AllsemblyServices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order_queue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.OrderQueue" title="allsembly.rpyc_server.OrderQueue"><span class="pre">allsembly.rpyc_server.OrderQueue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_arg_queue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.GraphUpdateArgQueue" title="allsembly.rpyc_server.GraphUpdateArgQueue"><span class="pre">allsembly.rpyc_server.GraphUpdateArgQueue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_pos_queue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.GraphUpdatePosQueue" title="allsembly.rpyc_server.GraphUpdatePosQueue"><span class="pre">allsembly.rpyc_server.GraphUpdatePosQueue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">issue_queue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">allsembly.rpyc_server.IssueQueue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_req</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.GraphRequest" title="allsembly.rpyc_server.GraphRequest"><span class="pre">allsembly.rpyc_server.GraphRequest</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ledger_req</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.rpyc_server.LedgerRequest" title="allsembly.rpyc_server.LedgerRequest"><span class="pre">allsembly.rpyc_server.LedgerRequest</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides a user with the services through
 remote procedure calls (RPC)</p>
 <dl class="py exception">
@@ -749,13 +665,6 @@ module, called via GraphRequest.</p>
 Just puts the request on the queue.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py method">
-<dt id="allsembly.rpyc_server.AllsemblyServices.exposed_authenticate_user">
-<code class="sig-name descname"><span class="pre">exposed_authenticate_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">credentials</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#allsembly.rpyc_server.AuthCredentialsStr" title="allsembly.rpyc_server.AuthCredentialsStr"><span class="pre">allsembly.rpyc_server.AuthCredentialsStr</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.exposed_authenticate_user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns encrypted cookie if userid exists in the database
-and password matches; None, otherwise</p>
 </dd></dl>
 
 <dl class="py method">
@@ -873,26 +782,12 @@ therefore, ready for processing.</p>
 </div>
 <div class="section" id="module-allsembly.user">
 <span id="user-module"></span><h3><strong>user</strong> module<a class="headerlink" href="#module-allsembly.user" title="Permalink to this headline">¶</a></h3>
-<p>Classes containing user data and authentication data and
-a function, “add_user(…)”, for adding a user to the authentication
-database.</p>
-<dl class="py class">
-<dt id="allsembly.user.UserAuth">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.user.</span></code><code class="sig-name descname"><span class="pre">UserAuth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwd</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwd_salt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.user.UserAuth" title="Permalink to this definition">¶</a></dt>
-<dd><p>User’s stored authentication credentials</p>
-</dd></dl>
-
+<p>Classes containing user data, currently unused.</p>
 <dl class="py class">
 <dt id="allsembly.user.UserClientSettings">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.user.</span></code><code class="sig-name descname"><span class="pre">UserClientSettings</span></code><a class="headerlink" href="#allsembly.user.UserClientSettings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Future place for storing a user’s web client
 settings.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="allsembly.user.add_user">
-<code class="sig-prename descclassname"><span class="pre">allsembly.user.</span></code><code class="sig-name descname"><span class="pre">add_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwd</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authdb_conn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ZODB.Connection.Connection</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="headerlink" href="#allsembly.user.add_user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return False if user already exists</p>
 </dd></dl>
 
 </div>
@@ -1313,12 +1208,6 @@ positions.</p>
 </div>
 <div class="section" id="future-design">
 <h2>Future design<a class="headerlink" href="#future-design" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="user-data-validation-and-type-safety">
-<h3>User data validation and type safety<a class="headerlink" href="#user-data-validation-and-type-safety" title="Permalink to this headline">¶</a></h3>
-<p>Generate Typescript function signatures for JSON-RPC and generate HTML5 forms
-with “type” fields using a combination of Python and XSLT.
-Use Pydantic for basic validation from type hints.</p>
-</div>
 <div class="section" id="design-for-confidentiality">
 <h3>Design for confidentiality<a class="headerlink" href="#design-for-confidentiality" title="Permalink to this headline">¶</a></h3>
 <p><em>This section and the next two sections, “Design for integrity” and “Design for scalability” describe features that are not expected to be added to the prototype.  They would be added later, in a stage of development beyond the prototype.  But they contain important ideas to keep in mind while developing the prototype.</em></p>
@@ -1427,6 +1316,11 @@ becomes a widely used piece of software.</p>
 </div>
 <div class="section" id="localization">
 <h3>Localization<a class="headerlink" href="#localization" title="Permalink to this headline">¶</a></h3>
+<p>UPDATE: Part of this can be handled using Django.  More information
+to be added.  I would still like to use XML in order to give clients
+more control over the presentation, but XML containing the translated
+strings can be generated by Django.  The default XSL can also be
+generated by Django, but in advance, rather than on-the-fly.</p>
 <p>My current intention is to implement localization by putting the strings
 in XML files and using XSLT transforms to select the appropriate
 string and to combine it with any dynamic data.</p>
