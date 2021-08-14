@@ -197,12 +197,12 @@ such as /etc/apache2/sites-enabled/000-default.conf or
 /etc/apache2/sites-enabled/default-ssl.conf (if you have SSL configured):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Alias</span> <span class="s2">&quot;/static/&quot;</span> <span class="s2">&quot;/home/&lt;user&gt;/allsembly-prototype/web/scripts/&quot;</span>
 <span class="n">WSGIScriptAlias</span> <span class="s2">&quot;/allsembly&quot;</span> <span class="s2">&quot;/home/&lt;user&gt;/allsembly-prototype/django_site/wsgi.py&quot;</span>
-<span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">django_site</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">home</span><span class="o">/&lt;</span><span class="n">user</span><span class="o">&gt;/</span><span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">django_site</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="n">Files</span> <span class="n">wsgi</span><span class="o">.</span><span class="n">py</span><span class="o">&gt;</span>
     <span class="n">Require</span> <span class="nb">all</span> <span class="n">granted</span>
   <span class="o">&lt;/</span><span class="n">Files</span><span class="o">&gt;</span>
 <span class="o">&lt;/</span><span class="n">Directory</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">web</span><span class="o">/</span><span class="n">scripts</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">home</span><span class="o">/&lt;</span><span class="n">user</span><span class="o">&gt;/</span><span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">web</span><span class="o">/</span><span class="n">scripts</span><span class="o">&gt;</span>
   <span class="n">Require</span> <span class="nb">all</span> <span class="n">granted</span>
 <span class="o">&lt;/</span><span class="n">Directory</span><span class="o">&gt;</span>
 </pre></div>
@@ -215,6 +215,10 @@ copied the allsembly-prototype repository.</p>
 Django settings file by editing allsembly-prototype/django_site/settings.py
 changing <code class="docutils literal notranslate"><span class="pre">ALLOWED_HOSTS</span> <span class="pre">=</span> <span class="pre">[]</span></code> to <code class="docutils literal notranslate"><span class="pre">ALLOWED_HOSTS</span> <span class="pre">=</span> <span class="pre">['hostname']</span></code>.
 Replace “hostname” with your hostname, e.g., “waleedmebane.com”.</p>
+<p>You will likely wish to <strong>set <code class="docutils literal notranslate"><span class="pre">DEBUG</span> <span class="pre">=</span> <span class="pre">False</span></code></strong> in the
+allsembly-prototype/django_site/settings.py file before making a
+public-facing deployment, but <code class="docutils literal notranslate"><span class="pre">DEBUG</span> <span class="pre">=</span> <span class="pre">True</span></code> is useful while checking
+that one’s installation and configuration is correct.</p>
 <p>Open a web browser and navigate to https://&lt;your-server-hostname&gt;/allsembly <br />
 Enter the userid and password of the user you created in a previous step.</p>
 <p>*NOTE: When building Python3.9.5 from source code, you might get an error
