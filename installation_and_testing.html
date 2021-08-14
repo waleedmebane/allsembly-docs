@@ -127,6 +127,7 @@ and give that user permission to read and write /var/allsembly-prototype/data</p
 <p><code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">a+x</span> <span class="pre">allsembly-prototype/scripts/allsembly-server.py</span></code></p>
 <p>Create the user database:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span>
+<span class="n">python3</span><span class="o">.</span><span class="mi">9</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">makemigrations</span>
 <span class="n">python3</span><span class="o">.</span><span class="mi">9</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">migrate</span>
 </pre></div>
 </div>
@@ -178,11 +179,17 @@ certificate: https://certbot.eff.org</p>
 <span class="n">sudo</span> <span class="n">a2enmod</span> <span class="n">wsgi</span>
 </pre></div>
 </div>
-<p>Add the lines printed by the following command to the bottom of
-/etc/apache2/apache2.conf:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mod_wsgi</span><span class="o">-</span><span class="n">express</span> <span class="n">module</span><span class="o">-</span><span class="n">config</span>
+<p>Add the following lines to the bottom of /etc/apache2/apache2.conf:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WSGIDaemonProcess</span> <span class="n">wsgipgroup</span> <span class="n">user</span><span class="o">=&lt;</span><span class="n">user</span><span class="o">&gt;</span> <span class="n">python</span><span class="o">-</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/home/&lt;user&gt;/allsembly-prototype&quot;</span>
+<span class="n">WSGIProcessGroup</span> <span class="n">wsgipgroup</span>
 </pre></div>
 </div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">/home/&lt;user&gt;</span></code> with the path into which you have cloned or
+copied the allsembly-prototype repository, and replace <code class="docutils literal notranslate"><span class="pre">&lt;user&gt;</span></code> in
+<code class="docutils literal notranslate"><span class="pre">user=&lt;user&gt;</span></code> with the name of a user that has read and execute
+permisions, as appropriate, in the django-site and django-app directories,
+or the owner of those directories.  You may use any name for the name
+of the process group.</p>
 <p>Add the following lines between of your virtual host’s VirtualHost
 open/close tags (e.g., <code class="docutils literal notranslate"><span class="pre">&lt;Virtualhost</span> <span class="pre">...&gt;...&lt;/VirtualHost&gt;</span></code>), which may
 be in one of your configuration files in /etc/apache2/sites-enabled,
@@ -190,12 +197,12 @@ such as /etc/apache2/sites-enabled/000-default.conf or
 /etc/apache2/sites-enabled/default-ssl.conf (if you have SSL configured):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Alias</span> <span class="s2">&quot;/static/&quot;</span> <span class="s2">&quot;/home/&lt;user&gt;/allsembly-prototype/web/scripts/&quot;</span>
 <span class="n">WSGIScriptAlias</span> <span class="s2">&quot;/allsembly&quot;</span> <span class="s2">&quot;/home/&lt;user&gt;/allsembly-prototype/django_site/wsgi.py&quot;</span>
-<span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">-</span><span class="n">django</span><span class="o">-</span><span class="n">version</span><span class="o">/</span><span class="n">django_site</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">django_site</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="n">Files</span> <span class="n">wsgi</span><span class="o">.</span><span class="n">py</span><span class="o">&gt;</span>
     <span class="n">Require</span> <span class="nb">all</span> <span class="n">granted</span>
   <span class="o">&lt;/</span><span class="n">Files</span><span class="o">&gt;</span>
 <span class="o">&lt;/</span><span class="n">Directory</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">-</span><span class="n">django</span><span class="o">-</span><span class="n">version</span><span class="o">/</span><span class="n">web</span><span class="o">/</span><span class="n">scripts</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">web</span><span class="o">/</span><span class="n">scripts</span><span class="o">&gt;</span>
   <span class="n">Require</span> <span class="nb">all</span> <span class="n">granted</span>
 <span class="o">&lt;/</span><span class="n">Directory</span><span class="o">&gt;</span>
 </pre></div>
