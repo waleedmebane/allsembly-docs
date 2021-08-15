@@ -127,7 +127,6 @@ and give that user permission to read and write /var/allsembly-prototype/data</p
 <p><code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">a+x</span> <span class="pre">allsembly-prototype/scripts/allsembly-server.py</span></code></p>
 <p>Create the user database:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span>
-<span class="n">python3</span><span class="o">.</span><span class="mi">9</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">makemigrations</span>
 <span class="n">python3</span><span class="o">.</span><span class="mi">9</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">migrate</span>
 </pre></div>
 </div>
@@ -149,20 +148,16 @@ and password.</p>
 </div>
 <div class="section" id="run-the-allsembly-server">
 <h3>Run the Allsembly™ server:<a class="headerlink" href="#run-the-allsembly-server" title="Permalink to this headline">¶</a></h3>
-<p>Before running the server, you may change any configuration settings
-in the server_config.py file.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">allsembly</span><span class="o">-</span><span class="n">prototype</span><span class="o">/</span><span class="n">scripts</span>
-<span class="n">sudo</span> <span class="n">su</span> <span class="n">allsembly</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span>
-<span class="o">./</span><span class="n">allsembly</span><span class="o">-</span><span class="n">server</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">daemon</span>
-<span class="n">exit</span>
+<span class="n">sudo</span> <span class="o">./</span><span class="n">allsembly</span><span class="o">-</span><span class="n">server</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">daemon</span> <span class="o">--</span><span class="n">user</span> <span class="n">allsembly</span>
 </pre></div>
 </div>
 <p>NOTE: to get it to persist across reboots, you will need a service script
 for systemd or initd.  I haven’t written one, yet.  Come back to the repo
 to check for it later.  Or you can write one consulting your OS documentation.
 In the meantime, you could put a line like:
-<code class="docutils literal notranslate"><span class="pre">&lt;directory</span> <span class="pre">containing</span> <span class="pre">allsembly-server.py</span> <span class="pre">and</span> <span class="pre">server_config.py&gt;/allsembly-server.py</span> <span class="pre">--daemon</span> <span class="pre">--user</span> <span class="pre">allsembly</span></code> into your /etc/rc.local file.
-(Replace <code class="docutils literal notranslate"><span class="pre">&lt;directory</span> <span class="pre">containing</span> <span class="pre">allsembly-server.py</span> <span class="pre">and</span> <span class="pre">server_config.py&gt;</span></code> with the path where you have put the files, e.g., <code class="docutils literal notranslate"><span class="pre">/usr/local/bin</span></code> or <code class="docutils literal notranslate"><span class="pre">/home/user/allsembly-prototype/scripts</span></code>.)</p>
+<code class="docutils literal notranslate"><span class="pre">&lt;directory</span> <span class="pre">containing</span> <span class="pre">allsembly-server.py&gt;/allsembly-server.py</span> <span class="pre">--daemon</span> <span class="pre">--user</span> <span class="pre">allsembly</span></code> into your /etc/rc.local file.
+(Replace <code class="docutils literal notranslate"><span class="pre">&lt;directory</span> <span class="pre">containing</span> <span class="pre">allsembly-server.py&gt;</span></code> with the path where you have put the file, e.g., <code class="docutils literal notranslate"><span class="pre">/usr/local/bin</span></code> or <code class="docutils literal notranslate"><span class="pre">/home/user/allsembly-prototype/scripts</span></code>.)</p>
 </div>
 <div class="section" id="setup-and-start-the-apache-web-server">
 <h3>Setup and start the Apache web server:<a class="headerlink" href="#setup-and-start-the-apache-web-server" title="Permalink to this headline">¶</a></h3>
