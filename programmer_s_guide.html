@@ -409,8 +409,8 @@ class BettingContract(Persistent) {
 
 </object></p>
 <p class="plantuml">
-<object data="_images/plantuml-758dd1cff7027f9067dd49e768660b13d97bfa83.svg" type="image/svg+xml" style="width:578px;height:279px;">
-<img src="_images/plantuml-758dd1cff7027f9067dd49e768660b13d97bfa83.png" alt="&#64;startuml
+<object data="_images/plantuml-825b1763bd1abc31b2dfdbb0ce3fddb196c80247.svg" type="image/svg+xml" style="width:659px;height:337px;">
+<img src="_images/plantuml-825b1763bd1abc31b2dfdbb0ce3fddb196c80247.png" alt="&#64;startuml
 caption Figure 2
 UserAgent -&gt; &quot;Django app&quot;: Authentication request
 
@@ -418,6 +418,8 @@ alt sucessful authentication
 
     UserAgent -&gt; &quot;Django app&quot;: service request with logged in session
     &quot;Django app&quot; -&gt; AllsemblyServices: service request
+    AllsemblyServices -&gt; &quot;Django app&quot;: response (for some services)
+    &quot;Django app&quot; -&gt; UserAgent: response
 
 else authentication failed
     &quot;Django app&quot; -&gt; UserAgent: Redirect to login page with error message
@@ -1211,7 +1213,7 @@ positions.</p>
 <img alt="_images/anonymity_preserving_registration.svg" src="_images/anonymity_preserving_registration.svg" /><p>The figure above shows a design with a separate server for login and a separate
 server for registration, which could be hosted by different organizations.
 The organization hosting the Registration server verifies the new user’s
-identity but never sees the user’s userid or passwors; those are encrypted
+identity but never sees the user’s userid or passwords; those are encrypted
 on the client side using the public key of the organization hosting the
 login server.</p>
 <p>The basic idea is that records containing the userid and records containing
@@ -1246,11 +1248,8 @@ in such a way that it only requires one step for the user.)</p>
 <p>If the user needs to change their PII, they log in to the registration
 server using their email adress.  (They could potentially use the same
 password hashed and salted differently.)</p>
-<p>A password may be reset by logging in to the registration server and again
-sending an encrypted userid which is passed on to the login server.  But to
-avoid a user being able to reset other users’ passwords something special
-needs to be done.</p>
-<p>There is no way to recover a forgotten userid without revoking anonymity.</p>
+<p>There is no way to recover a forgotten userid without connecting the userid with the real identity, temporarily breaching anonymity (i.e., intervention of the parties stewarding the relevant private keys).</p>
+<p>There seems also to be no way to recover a forgotten password without temporarily breaching anonymity for that user.  Although the user has both email address and userid, the user cannot authenticate with the login server using an email address without connecting the identities, so password reset via email would only get a user access to their profile on the registration server.</p>
 <p>If the ID guardian is a separate person/organization from the organization
 hosting the login server, then the representatives of both organizations
 are needed to revoke anonymity.</p>
@@ -1282,6 +1281,7 @@ users’ activities, the server should send cryptographically signed receipts
 for bids, asks, and betting contract purchases and sales.</p>
 <p>The client can store them in local memory and can also store pending
 transactions to re-send in case it does not get a confirmation receipt.</p>
+<p>Likewise, users should not be able to repudiate their orders or betting contracts.  So, those should be cryptographically signed by users as well.</p>
 </div>
 <div class="section" id="design-for-scalability">
 <h3>Design for scalability<a class="headerlink" href="#design-for-scalability" title="Permalink to this headline">¶</a></h3>
