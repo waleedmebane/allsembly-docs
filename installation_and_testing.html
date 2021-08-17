@@ -53,7 +53,6 @@ BSD and MIT, license terms.</p>
 Python &gt;=3.7 (tested with Python 3.9.5)
 pip
 Apache2
-openssl
 mod_wsgi
 graphviz
 graphviz-dev</p>
@@ -66,13 +65,11 @@ persistent
 transaction
 atomic
 readerwriterlock
-argon2-cffi
-cryptography
 typing
 python-daemon</p>
-<p>Install Apache2, openssl, and graphviz:</p>
+<p>Install Apache2 and graphviz:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">apache2</span> <span class="n">openssl</span> <span class="n">graphviz</span> <span class="n">graphviz</span><span class="o">-</span><span class="n">dev</span> <span class="n">apache2</span><span class="o">-</span><span class="n">dev</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">apache2</span> <span class="n">graphviz</span> <span class="n">graphviz</span><span class="o">-</span><span class="n">dev</span> <span class="n">apache2</span><span class="o">-</span><span class="n">dev</span>
 </pre></div>
 </div>
 <p>The apache2-dev package might not be necessary if you install Python and
