@@ -157,11 +157,20 @@
 <div class="line">Documents containing additional explanation about what Allsembly™ is about and the theory behind it–these files are not part of the documentation, and might be edited for publication elsewhere at some point.</div>
 <div class="line"><br /></div>
 <div class="line">notes.md</div>
+<div class="line-block">
+<div class="line">This file contains an overview of the dialogue procedure and why it is expected to be effective, including notes about a few salient design issues.</div>
 <div class="line"><br /></div>
-<div class="line">prospectus.pdf</div>
-<div class="line"><br /></div>
+</div>
 <div class="line">how_it_works.md</div>
+<div class="line-block">
+<div class="line">This file explains how human participants contribute to making the probabilistic estimates of the truth or correctness of conclusions possible, including a contrived example.</div>
 <div class="line"><br /></div>
+</div>
+<div class="line">prospectus.pdf</div>
+<div class="line-block">
+<div class="line">This file contains a scholarly presentation of the initial development of the theory and concepts that are behind this software prototype and includes some of the motivation as well.</div>
+<div class="line"><br /></div>
+</div>
 </div>
 <div class="line">scripts/</div>
 <div class="line"><br /></div>
@@ -1356,6 +1365,40 @@ otherwise, it may be useful to learn and reuseable knowledge.</p></li>
 </div>
 <div class="section" id="project-development-roadmap">
 <h2>Project development roadmap<a class="headerlink" href="#project-development-roadmap" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="accessibility-basics">
+<h3>Accessibility basics<a class="headerlink" href="#accessibility-basics" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Add text description to SVG diagram of the dialogue graph that describes the graph structure.</p></li>
+<li><p>Add keyboard controls for zooming and panning the SVG image.</p></li>
+<li><p>Maintain the page layout reasonably when the page is scaled with ctrl-+/-.</p></li>
+</ul>
+</div>
+<div class="section" id="core-features">
+<h3>Core features<a class="headerlink" href="#core-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Enable a user to reuse existing positions to support or oppose other arguments.</p></li>
+<li><p>Enable a user to mark two or more positions as the same or as mutually exclusive (the “Relate” feature).</p></li>
+<li><p>Enable a user to add posts to a per-position informal discussion (the “Discuss” feature).</p></li>
+<li><p>Implement the betting markets, including the order book, the matchin algorithm, and the ledger of bids and betting contracts.</p></li>
+<li><p>Enable the (re-)selling of existing betting contracts.</p></li>
+<li><p>Implement detection of inconsistent bids and bets and prevent users from making such.</p></li>
+<li><p>Implement detection of inconsistencies in other commitments (as the result of reductio arguments and some “Relate” actions) and enable users to resolve inconsistencies by selling betting contracts.</p></li>
+<li><p>Enable topic proposal.</p></li>
+<li><p>Enable users to interact on the same dialogues (not only single user sanboxes and simulated multi-user activity).</p></li>
+<li><p>Add policy proposals as the initial position type and add a policy evaluation positon type and the other policy decision features.</p></li>
+<li><p>(For possible inclusion in the prototype:) Add encryption of anonymous IDs that connect a user to their bids and bets in the ledger.</p></li>
+<li><p>(For possible inclusion in the prototype:) Add asymmetric encryption of userids in a registration record to prevent its connection with user login records, as described under <a class="reference internal" href="#design-for-confidentiality"><span class="std std-ref">Design for confidentiality</span></a>.  If this is added in the prototype, it will be an optional feature and only use a single public key, not two.</p></li>
+</ul>
+</div>
+<div class="section" id="demo-features">
+<h3>Demo features<a class="headerlink" href="#demo-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Enable deletion of positions.</p></li>
+<li><p>Add a guest login option.</p></li>
+<li><p>Allow a user to simulate multiple users by selecting the current user from a dropdown menu.</p></li>
+</ul>
+<p>More to be added to this section, including categorizing items as short-, medium-, or long-term and possibly including beyond-the-prototype items, later.</p>
+</div>
 </div>
 <div class="section" id="coding-standards">
 <h2>Coding standards<a class="headerlink" href="#coding-standards" title="Permalink to this headline">¶</a></h2>
@@ -1415,7 +1458,7 @@ recommendations.</p>
 </div>
 <div class="section" id="how-it-works">
 <h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
-<p>For now, see misc/how_it_works.md in the
+<p>For now, see <a class="reference external" href="https://github.com/waleedmebane/allsembly-prototype/blob/main/misc/how_it_works.md">misc/how_it_works.md</a> in the
 <a class="reference external" href="https://github.com/waleedmebane/allsembly-prototype">source code repository</a>.</p>
 </div>
 <div class="section" id="other-uses">
