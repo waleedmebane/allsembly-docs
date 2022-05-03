@@ -60,14 +60,15 @@ graphviz-dev</p>
 <p>Python packages:
 problog
 ZODB
-pygrphviz
+pygraphviz
 RPyC
 persistent
 transaction
 atomic
 readerwriterlock
 typing
-python-daemon</p>
+python-daemon
+django</p>
 <p>Install Apache2 and graphviz:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">apache2</span> <span class="n">graphviz</span> <span class="n">graphviz</span><span class="o">-</span><span class="n">dev</span> <span class="n">apache2</span><span class="o">-</span><span class="n">dev</span>
@@ -151,14 +152,24 @@ and password.</p>
 </pre></div>
 </div>
 <p>NOTE: to get it to persist across reboots, you will need a service script
-for systemd or initd.  I haven’t written one, yet.  Come back to the repo
-to check for it later.  Or you can write one consulting your OS documentation.
-In the meantime, you could put a line like:
+for systemd or initd.  See allsembly-prototype/scripts/allsembly.service
+for an example.  Modify the path on the line starting with “ExecStart=”
+to point to the location of allsembly-server.py on your system.  You
+then need to copy the service script into the appropriate system
+location: /etc/systemd/system/; and run
+the command to enable the service: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">enable</span> <span class="pre">allsembly.service</span></code>.
+Alternatively, you could put a line like:
 <code class="docutils literal notranslate"><span class="pre">&lt;directory</span> <span class="pre">containing</span> <span class="pre">allsembly-server.py&gt;/allsembly-server.py</span> <span class="pre">--daemon</span> <span class="pre">--user</span> <span class="pre">allsembly</span></code> into your /etc/rc.local file.
 (Replace <code class="docutils literal notranslate"><span class="pre">&lt;directory</span> <span class="pre">containing</span> <span class="pre">allsembly-server.py&gt;</span></code> with the path where you have put the file, e.g., <code class="docutils literal notranslate"><span class="pre">/usr/local/bin</span></code> or <code class="docutils literal notranslate"><span class="pre">/home/user/allsembly-prototype/scripts</span></code>.)</p>
 </div>
 <div class="section" id="setup-and-start-the-apache-web-server">
 <h3>Setup and start the Apache web server:<a class="headerlink" href="#setup-and-start-the-apache-web-server" title="Permalink to this headline">¶</a></h3>
+<p>(NOTE: you can try out Allsembly™ using the web server build into
+Django.  Consult the Django documentation for details.  Basically,
+you can execute <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">manage.py</span> <span class="pre">runserver</span></code> from the allsembly-prototype
+directory; then connect to http://127.0.0.1:8000.  You can skip setting
+up Apache and return to it later when you desire a production quality
+web service.)</p>
 <div class="section" id="setup-ssl-recommended">
 <h4>Setup SSL (Recommended)<a class="headerlink" href="#setup-ssl-recommended" title="Permalink to this headline">¶</a></h4>
 <p>Add an SSL certificate, either by following the directions given by
