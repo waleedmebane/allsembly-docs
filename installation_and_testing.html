@@ -99,6 +99,7 @@ sudo make install
 </div>
 <p>The configure options, except –enable-optimization, which is optional,
 are needed for Python to work well with mod_wsgi.
+(For Python 3.12 from source, I also needed to run, before running “./configure”: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">openssl</span> <span class="pre">zlibc</span> <span class="pre">libreadline-dev</span> <span class="pre">zlib1-dev</span> <span class="pre">libbz2-dev</span> <span class="pre">libffi-dev</span> <span class="pre">libssl-dev</span></code>)
 (<code class="docutils literal notranslate"><span class="pre">*</span></code>See the bottom of this section for a tip in case you get an error message
 about needing to add a source repository in order to install build
 dependencies–the first step listed above.)</p>
@@ -156,7 +157,7 @@ for systemd or initd.  See allsembly-prototype/scripts/allsembly.service
 for an example.  Modify the path on the line starting with “ExecStart=”
 to point to the location of allsembly-server.py on your system.  You
 then need to copy the service script into the appropriate system
-location: /etc/systemd/system/; and run
+location: /lib/systemd/system/; and run
 the command to enable the service: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">enable</span> <span class="pre">allsembly.service</span></code>.
 Alternatively, you could put a line like:
 <code class="docutils literal notranslate"><span class="pre">&lt;directory</span> <span class="pre">containing</span> <span class="pre">allsembly-server.py&gt;/allsembly-server.py</span> <span class="pre">--daemon</span> <span class="pre">--user</span> <span class="pre">allsembly</span></code> into your /etc/rc.local file.
@@ -323,7 +324,7 @@ distribution by typing <code class="docutils literal notranslate"><span class="p
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2021, Waleed H. Mebane.
+      &copy;2021, 2023 Waleed H. Mebane.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>

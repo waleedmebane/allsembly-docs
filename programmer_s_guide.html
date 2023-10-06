@@ -141,11 +141,21 @@
 <div class="line">The main file of the documentation</div>
 <div class="line"><br /></div>
 </div>
+<div class="line">how_it_works.md</div>
+<div class="line-block">
+<div class="line">This file explains how human participants contribute to making the probabilistic estimates of the truth or correctness of conclusions possible, including a contrived example.</div>
+<div class="line"><br /></div>
+</div>
 <div class="line">make.bat</div>
 <div class="line"><br /></div>
 <div class="line">Makefile</div>
 <div class="line-block">
 <div class="line">Files for building the documentation.  Sphinx is required.</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">notes.md</div>
+<div class="line-block">
+<div class="line">This file contains an overview of the dialogue procedure and why it is expected to be effective, including notes about a few salient design issues.</div>
 <div class="line"><br /></div>
 </div>
 </div>
@@ -158,16 +168,6 @@
 <div class="line-block">
 <div class="line">Documents containing additional explanation about what Allsembly™ is about and the theory behind it–these files are not part of the documentation, and might be edited for publication elsewhere at some point.</div>
 <div class="line"><br /></div>
-<div class="line">notes.md</div>
-<div class="line-block">
-<div class="line">This file contains an overview of the dialogue procedure and why it is expected to be effective, including notes about a few salient design issues.</div>
-<div class="line"><br /></div>
-</div>
-<div class="line">how_it_works.md</div>
-<div class="line-block">
-<div class="line">This file explains how human participants contribute to making the probabilistic estimates of the truth or correctness of conclusions possible, including a contrived example.</div>
-<div class="line"><br /></div>
-</div>
 <div class="line">prospectus.pdf</div>
 <div class="line-block">
 <div class="line">This file contains a scholarly presentation of the initial development of the theory and concepts that are behind this software prototype and includes some of the motivation as well.</div>
@@ -531,15 +531,6 @@ Loops, processing requests, until calling process</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="allsembly.allsembly.PicklableAtomicLong">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.allsembly.</span></code><code class="sig-name descname"><span class="pre">PicklableAtomicLong</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.allsembly.PicklableAtomicLong" title="Permalink to this definition">¶</a></dt>
-<dd><p>AtomicLong is a module
-written in C, and so is not picklable.
-Use this class instead when serialization using Pickle is
-required, such as with ZODB persistence.</p>
-</dd></dl>
-
-<dl class="py class">
 <dt id="allsembly.allsembly.ServerControl">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.allsembly.</span></code><code class="sig-name descname"><span class="pre">ServerControl</span></code><a class="headerlink" href="#allsembly.allsembly.ServerControl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use this to tell the server_main_loop to exit,
@@ -552,14 +543,6 @@ reset_should_exit().  That is not currently necessary in
 AllsemblyServer.server_main_loop(…).
 A server should call should_exit() periodically, such as in
 a main while loop, to check whether it should exit.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt id="allsembly.allsembly.ServerControlThreadSafe">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.allsembly.</span></code><code class="sig-name descname"><span class="pre">ServerControlThreadSafe</span></code><a class="headerlink" href="#allsembly.allsembly.ServerControlThreadSafe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Thread safe version of ServerControl
-Use this to tell the server_main_loop to exit,
-by setting “should_exit”.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -667,6 +650,11 @@ module, called via GraphRequest.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="allsembly.rpyc_server.AllsemblyServices.UserServices.get_next_arg_graph">
+<code class="sig-name descname"><span class="pre">get_next_arg_graph</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_graph_revision_number</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.UserServices.get_next_arg_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="allsembly.rpyc_server.AllsemblyServices.UserServices.get_position_details">
 <code class="sig-name descname"><span class="pre">get_position_details</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.UserServices.get_position_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the full text of a position.</p>
@@ -732,7 +720,7 @@ Just puts the request on the queue.</p>
 
 <dl class="py class">
 <dt id="allsembly.rpyc_server.GraphRequest">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.rpyc_server.</span></code><code class="sig-name descname"><span class="pre">GraphRequest</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issues</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.argument_graph.IssuesDBAccessor" title="allsembly.argument_graph.IssuesDBAccessor"><span class="pre">allsembly.argument_graph.IssuesDBAccessor</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.GraphRequest" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.rpyc_server.</span></code><code class="sig-name descname"><span class="pre">GraphRequest</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issues_from_db</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.argument_graph.IssuesDBAccessor" title="allsembly.argument_graph.IssuesDBAccessor"><span class="pre">allsembly.argument_graph.IssuesDBAccessor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">issues_obj_not_safe_to_write</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#allsembly.argument_graph.Issues" title="allsembly.argument_graph.Issues"><span class="pre">allsembly.argument_graph.Issues</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.GraphRequest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides a thread-safe way to get data from the argument
 graph.
 In particular, use this to draw the SVG representation
@@ -900,12 +888,7 @@ the Problog python package).</p>
 <dt id="allsembly.prob_logic.ProblogModel">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">allsembly.prob_logic.</span></code><code class="sig-name descname"><span class="pre">ProblogModel</span></code><a class="headerlink" href="#allsembly.prob_logic.ProblogModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Problog terms and rules that model the argument graph
-and allow Problog to create the Bayesian Network
-and do the inference.
-Uses “virtual evidence”: uncertain evidence is modelled with
-a probabilistic rule, where the probability is the certainty
-of the evidence; the antecedent is virtual evidence, with
-probability 1, and the consequent is the real evidence.</p>
+and allow Problog to do the inference.</p>
 <p>Note that the current Problog models (constructed in ArgumentGraph 
 methods, _add_clause_to_problog_program(), 
 _add_virtual_evidence_to_problog_program(), and
@@ -1464,7 +1447,7 @@ recommendations.</p>
 </div>
 <div class="section" id="how-it-works">
 <h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
-<p>For now, see <a class="reference external" href="https://github.com/waleedmebane/allsembly-prototype/blob/main/misc/how_it_works.md">misc/how_it_works.md</a> in the
+<p>For now, see <a class="reference external" href="https://github.com/waleedmebane/allsembly-prototype/blob/main/docs/how_it_works.md">docs/how_it_works.md</a> in the
 <a class="reference external" href="https://github.com/waleedmebane/allsembly-prototype">source code repository</a>.</p>
 </div>
 <div class="section" id="other-uses">
@@ -1566,7 +1549,7 @@ based on the activity of the human participants.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2021, Waleed H. Mebane.
+      &copy;2021, 2023 Waleed H. Mebane.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
