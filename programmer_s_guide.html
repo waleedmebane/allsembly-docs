@@ -37,7 +37,7 @@
 <div class="section" id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
-<dt>Apache2</dt><dd><p>This is the web server.  Other web servers could be substituted.  I chose Apache because it is the premier free and open source web server.  We can have confidence in its security and robustness, as much as is possible for web server software.</p>
+<dt>Apache2</dt><dd><p>This is the web server.  Other web servers could be substituted.  I chose Apache because it is the premier free and open source web server.  Also, because it has mod_wsgi, it is simpler to setup for deploying Django apps.</p>
 </dd>
 <dt>Apache2 mod_wsgi</dt><dd><p>For interacting with Django (using the Python WSGI standard directly instead of CGI)</p>
 </dd>
@@ -651,8 +651,13 @@ module, called via GraphRequest.</p>
 
 <dl class="py method">
 <dt id="allsembly.rpyc_server.AllsemblyServices.UserServices.get_next_arg_graph">
-<code class="sig-name descname"><span class="pre">get_next_arg_graph</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_graph_revision_number</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.UserServices.get_next_arg_graph" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">get_next_arg_graph</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_graph_revision_number</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#allsembly.rpyc_server.AllsemblyServices.UserServices.get_next_arg_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the argument graph (svg string) and the graph revision 
+number on success or an error code on failure:
+1, if the call to get the graph returned early with no graph
+2, if the call timed out.
+TODO: use an enumeration instead of an int for the error codes.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="allsembly.rpyc_server.AllsemblyServices.UserServices.get_position_details">
@@ -725,6 +730,17 @@ Just puts the request on the queue.</p>
 graph.
 In particular, use this to draw the SVG representation
 of the graph or get the pre-drawn SVG.</p>
+<dl class="py class">
+<dt id="allsembly.rpyc_server.GraphRequest.ErrCodes">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">ErrCodes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.GraphRequest.ErrCodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="allsembly.rpyc_server.GraphRequest.Error">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Error</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">‘GraphRequest.ErrCodes’</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allsembly.rpyc_server.GraphRequest.Error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1296,7 +1312,21 @@ An alternative would be to use an SQL DBMS through an object-relational
 mapper (ORM) to possibly eek out some better concurrency.  It might not
 be necessary to do that, though.</p>
 <p>Python does not provide thread parallelism.  I assume that I will eventually
-have to write custom code to replace Problog.  Other than that, I would
+have to replace Problog, maybe with custom code.  A promising possibility may
+be to use iterative join-graph probagation (IGJP), which is an “anytime”
+algorithm for evaluating Bayesian Networks.  At each iteration, it gets
+closer to the exact solution.  So, the graph could be updated with the
+approximate values computed so far until the algorithm converges on the
+solution.  There is an existing open source implementation in a
+software package called <a class="reference external" href="https://github.com/radum2275/merlin/">“merlin”</a>.
+It could be integrated into the Allsembly server.  It is single threaded.
+However, I would like to investigate parallelizing the algorithm.  There
+is a dependency of a node on the node from which it receives a message
+in IJGP (and in other message passing belief propagation algorithms).
+But it seems like there would be many graphs that would have multiple
+semi-independent paths parts of which could have their calculations
+independently computed by separate worker threads.</p>
+<p>Other than that, I would
 propose parallelising the Allsembly™ server using separate processes, with
 each process handling one or more complete issues (whole argument graphs).
 The separate processes would have to coordinate with regard to users needing
